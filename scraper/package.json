@@ -1,0 +1,21 @@
+{
+  "name": "next-race-scraper",
+  "private": true,
+  "type": "module",
+  "description": "Collects race listings from approved sources into a review queue.",
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "scrape": "node src/run.ts",
+    "test": "node --test test/parse.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.6.0"
+  }
+}
