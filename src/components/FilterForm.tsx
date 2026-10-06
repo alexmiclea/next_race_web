@@ -4,7 +4,7 @@ import { AutoApplyForm } from "@/components/AutoApplyForm";
 import { CountySelect } from "@/components/CountySelect";
 import { DateField } from "@/components/DateField";
 import type { County, Sport } from "@/lib/events";
-import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
+import { DISTANCE_BUCKETS, FORMATS, hasFilters, type Filters } from "@/lib/filters";
 
 /**
  * Filters live in the URL, so filtered views can be bookmarked or shared. The form
@@ -89,6 +89,18 @@ export async function FilterForm({
             placeholder={t("pickDate")}
             className={control}
           />
+        </label>
+
+        <label className={`${field} col-span-2 sm:col-span-1`}>
+          {t("format")}
+          <select name="format" defaultValue={filters.format ?? ""} className={control}>
+            <option value="">{t("any")}</option>
+            {FORMATS.map((format) => (
+              <option key={format} value={format}>
+                {t(`formats.${format}`)}
+              </option>
+            ))}
+          </select>
         </label>
       </div>
 

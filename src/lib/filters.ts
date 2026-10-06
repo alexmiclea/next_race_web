@@ -9,11 +9,18 @@ export const DISTANCE_BUCKETS = {
 
 export type DistanceBucket = keyof typeof DISTANCE_BUCKETS;
 
+/** Whether a race happens at a place, or can be run from anywhere. */
+export const FORMATS = ["in-person", "virtual"] as const;
+
+export type Format = (typeof FORMATS)[number];
+
 export type Filters = {
   sport?: string;
   /** County codes (CJ, B…); empty means all counties. */
   counties: string[];
   distance?: DistanceBucket;
+  /** Only in-person or only virtual races; unset means both. */
+  format?: Format;
   /** YYYY-MM-DD */
   from?: string;
   /** YYYY-MM-DD */
@@ -38,12 +45,14 @@ export function parseFilters(params: SearchParams): Filters {
     (code) => COUNTY_CODE.test(code),
   );
   const distance = value("distance");
+  const format = value("format");
   const from = value("from");
   const to = value("to");
   return {
     sport: value("sport"),
     counties,
     distance: distance && distance in DISTANCE_BUCKETS ? (distance as DistanceBucket) : undefined,
+    format: FORMATS.find((known) => known === format),
     from: from && DATE.test(from) ? from : undefined,
     to: to && DATE.test(to) ? to : undefined,
   };

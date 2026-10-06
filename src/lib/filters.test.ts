@@ -40,6 +40,22 @@ describe("parseFilters", () => {
     expect(filters.to).toBeUndefined();
   });
 
+  describe("format", () => {
+    it("reads virtual and in-person", () => {
+      expect(parseFilters({ format: "virtual" }).format).toBe("virtual");
+      expect(parseFilters({ format: "in-person" }).format).toBe("in-person");
+    });
+
+    it("means both when empty or unknown", () => {
+      expect(parseFilters({ format: "" }).format).toBeUndefined();
+      expect(parseFilters({ format: "online" }).format).toBeUndefined();
+    });
+
+    it("counts as a filter", () => {
+      expect(hasFilters(parseFilters({ format: "virtual" }))).toBe(true);
+    });
+  });
+
   describe("counties", () => {
     it("reads several counties from repeated keys, as checkboxes submit them", () => {
       expect(parseFilters({ county: ["CJ", "BV", "B"] }).counties).toEqual(["CJ", "BV", "B"]);

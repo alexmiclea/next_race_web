@@ -40,6 +40,11 @@
       "medium": "10 – 21 km",
       "long": "21 – 42 km",
       "ultra": "Ultra (peste 42 km)"
+    },
+    "format": "Tip",
+    "formats": {
+      "in-person": "La fața locului",
+      "virtual": "Virtuale"
     }
   },
   "Home": {
