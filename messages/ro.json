@@ -9,6 +9,12 @@
     "about": "Despre",
     "home": "Next Race — pagina principală"
   },
+  "Theme": {
+    "label": "Temă: {theme}",
+    "system": "sistem",
+    "light": "luminoasă",
+    "dark": "întunecată"
+  },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
     "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului."

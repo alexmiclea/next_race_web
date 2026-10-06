@@ -26,8 +26,22 @@
   --font-sans: var(--font-geist-sans);
 }
 
+/* Dark theme: chosen in the theme switch (data-theme="dark"), or following the
+   device when no theme is chosen. The two blocks must stay identical. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0e1116;
+  --surface: #171b22;
+  --foreground: #e8eaed;
+  --muted: #9ba3ae;
+  --border: #2a303a;
+  --accent: #fb8a4c;
+  --accent-soft: #2a1a10;
+  --on-accent: #1a0d05;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     color-scheme: dark;
     --background: #0e1116;
     --surface: #171b22;
