@@ -3,9 +3,11 @@
 import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
+import { eventPath } from "@/lib/paths";
 
 export type MapEvent = {
   id: string;
+  slug: string;
   name: string;
   /** Preformatted, e.g. "24 – 25 aprilie 2027". */
   dates: string;
@@ -100,7 +102,7 @@ function popupContent(events: MapEvent[], detailsLabel: string): HTMLElement {
     const dates = document.createElement("div");
     dates.textContent = event.dates;
     const link = document.createElement("a");
-    link.href = `/concurs/${event.id}`;
+    link.href = eventPath(event);
     link.textContent = `${detailsLabel} →`;
     item.append(name, dates, link);
     list.append(item);

@@ -23,6 +23,7 @@ export default async function MapPage({ searchParams }: PageProps<"/harta">) {
       ? [
           {
             id: event.id,
+            slug: event.slug,
             name: event.name,
             dates: formatEventDates(format, event),
             latitude: event.latitude,

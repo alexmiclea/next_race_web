@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
 import { formatEventDates } from "@/lib/format";
+import { eventPath } from "@/lib/paths";
 
-export async function generateMetadata({ params }: PageProps<"/concurs/[id]">): Promise<Metadata> {
-  const event = await getEvent((await params).id);
+export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">): Promise<Metadata> {
+  const event = await getEvent((await params).slug);
   if (!event) return {};
   const place = eventPlace(event);
   return {
@@ -15,9 +16,12 @@ export async function generateMetadata({ params }: PageProps<"/concurs/[id]">): 
   };
 }
 
-export default async function EventPage({ params }: PageProps<"/concurs/[id]">) {
-  const event = await getEvent((await params).id);
+export default async function EventPage({ params }: PageProps<"/concurs/[slug]">) {
+  const { slug } = await params;
+  const event = await getEvent(slug);
   if (!event) notFound();
+  // Old links used the event id; send them to the readable address.
+  if (decodeURIComponent(slug) !== event.slug) permanentRedirect(eventPath(event));
 
   const t = await getTranslations("Event");
   const format = await getFormatter();

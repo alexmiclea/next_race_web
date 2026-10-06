@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { eventPlace, eventSports, type Event } from "@/lib/events";
 import { formatEventDates, parseDate } from "@/lib/format";
+import { eventPath } from "@/lib/paths";
 
 export async function EventCard({ event }: { event: Event }) {
   const t = await getTranslations("Event");
@@ -13,7 +14,7 @@ export async function EventCard({ event }: { event: Event }) {
   return (
     <li>
       <Link
-        href={`/concurs/${event.id}`}
+        href={eventPath(event)}
         className="flex gap-4 rounded-xl border border-border bg-background p-4 transition hover:border-accent hover:shadow-sm"
       >
         {/* Calendar-style date block; the full date is in the <time> below for screen readers. */}

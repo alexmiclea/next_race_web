@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { DISTANCE_BUCKETS, today, type Filters } from "@/lib/filters";
+import { eventLookup } from "@/lib/paths";
 
 export type Race = {
   id: string;
@@ -12,6 +13,8 @@ export type Race = {
 
 export type Event = {
   id: string;
+  /** Permanent readable URL part, e.g. "bucharest-marathon-2026" (set by the database). */
+  slug: string;
   name: string;
   organizer: string | null;
   start_date: string;
@@ -33,7 +36,7 @@ export type Sport = { slug: string; name_ro: string };
 export type County = { code: string; name: string };
 
 const EVENT_FIELDS = `
-  id, name, organizer, start_date, end_date, start_time, city, county_code, is_virtual,
+  id, slug, name, organizer, start_date, end_date, start_time, city, county_code, is_virtual,
   latitude, longitude, website_url, registration_url, source_url,
   counties(name),
   races(id, label, distance_km, sort_order, sport_slug, sports(name_ro))
@@ -69,16 +72,17 @@ export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
   return data.map(sortRaces);
 }
 
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-
-/** One approved event, or null if it doesn't exist (or isn't public). */
-export async function getEvent(id: string): Promise<Event | null> {
-  if (!UUID.test(id)) return null;
+/**
+ * One approved event by its slug (or, for old links, its id), or null if it doesn't
+ * exist or isn't public.
+ */
+export async function getEvent(slugOrId: string): Promise<Event | null> {
+  const { column, value } = eventLookup(slugOrId);
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("events")
     .select(EVENT_FIELDS)
-    .eq("id", id)
+    .eq(column, value)
     .maybeSingle()
     .returns<Event | null>();
   if (error) throw new Error(`Loading event failed: ${error.message}`);
