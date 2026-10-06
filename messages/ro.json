@@ -1,0 +1,15 @@
+{
+  "Metadata": {
+    "title": "Next Race — concursuri de alergare, ciclism, înot și triatlon în România",
+    "description": "Găsește următorul concurs: alergare, ciclism, înot și triatlon în toată România. Dată, locație, distanțe și înscriere."
+  },
+  "Home": {
+    "tagline": "Următorul tău concurs, în toată România.",
+    "upcoming": "Concursuri care urmează",
+    "empty": "Încă nu sunt concursuri publicate. Revino curând!",
+    "error": "Nu am putut încărca concursurile. Încearcă din nou mai târziu.",
+    "virtual": "Oriunde (virtual)",
+    "website": "Site-ul concursului",
+    "source": "Sursa"
+  }
+}

@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+@AGENTS.md
+
 Guidance for Claude when working in this repository. Keep this file short and current — update it whenever a decision is made.
 
 ## Project
@@ -10,7 +12,21 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Early stage. The repo currently contains a single placeholder `index.html` (a generic app landing page). Nothing is final yet.
+Early stage. Next.js app scaffolded with a basic home page listing upcoming approved events from Supabase. Initial database schema in `supabase/migrations/`. Race scraper in `scraper/`.
+
+### Layout
+
+- `src/app/` — Next.js 16 App Router pages (`params` / `searchParams` / `cookies()` are async)
+- `src/lib/supabase/server.ts` — Supabase client for server code (publishable key; RLS controls access)
+- `src/i18n/request.ts` + `messages/ro.json` — next-intl, Romanian only, no locale prefix in URLs yet
+- `supabase/migrations/` — SQL migrations, applied in order (for now: pasted into the Supabase SQL editor)
+- `scraper/` — standalone scraper package (excluded from the website's TypeScript and ESLint)
+
+### Data model
+
+- `events` — one event (name, dates, city, county, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
+- `races` — one per distance/category of an event (`label`, `distance_km`, `sport_slug`).
+- `sports`, `counties` — reference data. Sport names live in the `sports` table, not in translation files.
 
 ## Decisions
 
@@ -31,6 +47,8 @@ Record decisions here so they aren't re-discussed in later sessions.
   - The scraper runs on a schedule via GitHub Actions (not Vercel Cron), one source at a time.
   - Build order: listing + filters with hand-entered seed data → review queue + admin screen → scraper → organizer accounts and submissions.
 
+- No mobile app for now. The website must be fully responsive (mobile-first) instead.
+- Supabase project: `ckzhgqaalsgwiomlbbdf` (EU). Env vars in `.env.local` (see `.env.example`). The secret key is server-only and must never be committed or pasted into chat.
 - The scraper is generic and reusable: websites are config entries in `scraper/src/sources.ts` (URL, sport, parser); parsers in `scraper/src/parsers/` handle page layouts, not specific sites. Don't write site-specific scraper code.
 - Scrape sources (add each new one here once checked):
   - https://vladcarbune.ro/calendar-evenimente-alergare-{year}/ (running)
@@ -40,7 +58,6 @@ Record decisions here so they aren't re-discussed in later sessions.
 Resolve these before building much; move each to **Decisions** once settled.
 
 - More scrape sources, especially for swimming, cycling and triathlon
-- Is there a companion mobile app? (the placeholder page has App Store / Google Play buttons)
 
 ## Domain notes
 
@@ -57,7 +74,13 @@ Resolve these before building much; move each to **Decisions** once settled.
 
 ## Commands
 
-Website: none yet (Next.js not scaffolded).
+Website (repo root; needs `.env.local`):
+
+- `npm install` — install dependencies
+- `npm run dev` — dev server at http://localhost:3000
+- `npm run build` — production build
+- `npm run lint` — ESLint
+- `npm run typecheck` — generate route types, then TypeScript check
 
 Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly by Node — no build step):
 
