@@ -4,7 +4,7 @@ import { AutoApplyForm } from "@/components/AutoApplyForm";
 import { CountySelect } from "@/components/CountySelect";
 import { DateField } from "@/components/DateField";
 import type { County, Sport } from "@/lib/events";
-import { DISTANCE_BUCKETS, FORMATS, hasFilters, type Filters } from "@/lib/filters";
+import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
 
 /**
  * Filters live in the URL, so filtered views can be bookmarked or shared. The form
@@ -15,12 +15,15 @@ export async function FilterForm({
   filters,
   sports,
   counties,
+  virtualToggle = true,
 }: {
   /** Page the form submits to ("/" or "/harta"). */
   action: string;
   filters: Filters;
   sports: Sport[];
   counties: County[];
+  /** Show the "include virtual races" box (pointless on the map: virtual races have no place). */
+  virtualToggle?: boolean;
 }) {
   const t = await getTranslations("Filters");
   const field = "flex min-w-0 flex-col gap-1 text-sm font-medium";
@@ -91,17 +94,22 @@ export async function FilterForm({
           />
         </label>
 
-        <label className={`${field} col-span-2 sm:col-span-1`}>
-          {t("format")}
-          <select name="format" defaultValue={filters.format ?? ""} className={control}>
-            <option value="">{t("any")}</option>
-            {FORMATS.map((format) => (
-              <option key={format} value={format}>
-                {t(`formats.${format}`)}
-              </option>
-            ))}
-          </select>
-        </label>
+        {virtualToggle && (
+          <div className="col-span-2 flex items-end sm:col-span-1">
+            {/* Always sends virtual=0; the ticked box adds virtual=1 (see filtersQuery). */}
+            <input type="hidden" name="virtual" value="0" />
+            <label className="flex h-10 cursor-pointer items-center gap-2 text-sm font-medium">
+              <input
+                type="checkbox"
+                name="virtual"
+                value="1"
+                defaultChecked={!filters.hideVirtual}
+                className="size-5 accent-[var(--accent)]"
+              />
+              {t("includeVirtual")}
+            </label>
+          </div>
+        )}
       </div>
 
       {/* Once the form applies itself (data-enhanced), only the reset link remains. */}

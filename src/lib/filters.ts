@@ -9,18 +9,13 @@ export const DISTANCE_BUCKETS = {
 
 export type DistanceBucket = keyof typeof DISTANCE_BUCKETS;
 
-/** Whether a race happens at a place, or can be run from anywhere. */
-export const FORMATS = ["in-person", "virtual"] as const;
-
-export type Format = (typeof FORMATS)[number];
-
 export type Filters = {
   sport?: string;
   /** County codes (CJ, B…); empty means all counties. */
   counties: string[];
   distance?: DistanceBucket;
-  /** Only in-person or only virtual races; unset means both. */
-  format?: Format;
+  /** Leave out virtual races (the "include virtual races" box is unticked). */
+  hideVirtual?: true;
   /** YYYY-MM-DD */
   from?: string;
   /** YYYY-MM-DD */
@@ -45,14 +40,13 @@ export function parseFilters(params: SearchParams): Filters {
     (code) => COUNTY_CODE.test(code),
   );
   const distance = value("distance");
-  const format = value("format");
   const from = value("from");
   const to = value("to");
   return {
     sport: value("sport"),
     counties,
     distance: distance && distance in DISTANCE_BUCKETS ? (distance as DistanceBucket) : undefined,
-    format: FORMATS.find((known) => known === format),
+    hideVirtual: virtualValues(params.virtual) === "hide" || undefined,
     from: from && DATE.test(from) ? from : undefined,
     to: to && DATE.test(to) ? to : undefined,
   };
@@ -67,7 +61,21 @@ export function filtersQuery(data: FormData): string {
   for (const [key, value] of data) {
     if (typeof value === "string" && value.trim() !== "") params.append(key, value.trim());
   }
+  // Ticked by default, so only the unticked state goes in the URL ("virtual=0").
+  const virtual = virtualValues(params.getAll("virtual"));
+  params.delete("virtual");
+  if (virtual === "hide") params.set("virtual", "0");
   return params.toString();
+}
+
+/**
+ * The "include virtual races" checkbox sends `virtual=1` when ticked. A hidden field
+ * before it always sends `virtual=0`, so unticking is visible even without JavaScript:
+ * a "0" with no "1" means hide.
+ */
+function virtualValues(raw: string | string[] | undefined): "show" | "hide" {
+  const values = [raw ?? []].flat();
+  return values.includes("0") && !values.includes("1") ? "hide" : "show";
 }
 
 export function hasFilters(filters: Filters): boolean {

@@ -40,19 +40,22 @@ describe("parseFilters", () => {
     expect(filters.to).toBeUndefined();
   });
 
-  describe("format", () => {
-    it("reads virtual and in-person", () => {
-      expect(parseFilters({ format: "virtual" }).format).toBe("virtual");
-      expect(parseFilters({ format: "in-person" }).format).toBe("in-person");
+  describe("virtual races", () => {
+    it("shows them by default", () => {
+      expect(parseFilters({}).hideVirtual).toBeUndefined();
     });
 
-    it("means both when empty or unknown", () => {
-      expect(parseFilters({ format: "" }).format).toBeUndefined();
-      expect(parseFilters({ format: "online" }).format).toBeUndefined();
+    it("hides them when the box is unticked (only the hidden virtual=0 is sent)", () => {
+      expect(parseFilters({ virtual: "0" }).hideVirtual).toBe(true);
+      expect(hasFilters(parseFilters({ virtual: "0" }))).toBe(true);
     });
 
-    it("counts as a filter", () => {
-      expect(hasFilters(parseFilters({ format: "virtual" }))).toBe(true);
+    it("shows them when the box is ticked (virtual=0 and virtual=1 are both sent)", () => {
+      expect(parseFilters({ virtual: ["0", "1"] }).hideVirtual).toBeUndefined();
+    });
+
+    it("ignores other values", () => {
+      expect(parseFilters({ virtual: "no" }).hideVirtual).toBeUndefined();
     });
   });
 
@@ -96,6 +99,16 @@ describe("filtersQuery", () => {
 
   it("is empty when nothing is set", () => {
     expect(filtersQuery(formData([["sport", ""]]))).toBe("");
+  });
+
+  it("leaves the virtual box out of the URL while it is ticked", () => {
+    expect(filtersQuery(formData([["virtual", "0"], ["virtual", "1"]]))).toBe("");
+  });
+
+  it("adds virtual=0 once when the virtual box is unticked", () => {
+    expect(filtersQuery(formData([["sport", "running"], ["virtual", "0"]]))).toBe(
+      "sport=running&virtual=0",
+    );
   });
 
   it("round-trips through parseFilters", () => {

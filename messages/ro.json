@@ -41,11 +41,7 @@
       "long": "21 – 42 km",
       "ultra": "Ultra (peste 42 km)"
     },
-    "format": "Tip",
-    "formats": {
-      "in-person": "La fața locului",
-      "virtual": "Virtuale"
-    }
+    "includeVirtual": "Include curse virtuale"
   },
   "Home": {
     "title": "Următorul tău concurs",
@@ -55,7 +51,8 @@
     "error": "Nu am putut încărca concursurile. Încearcă din nou mai târziu."
   },
   "Event": {
-    "virtual": "Oriunde (virtual)",
+    "virtual": "Oriunde",
+    "virtualTag": "Virtual",
     "unknownPlace": "Locație necunoscută",
     "details": "Detalii",
     "back": "Înapoi la concursuri",

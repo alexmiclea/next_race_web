@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
 import { formatEventDates } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
@@ -38,8 +39,9 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
       </Link>
 
       <header className="mt-4">
-        <p className="text-sm font-semibold uppercase tracking-wide text-accent">
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent">
           {eventSports(event).join(" · ")}
+          {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
         </p>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
       </header>

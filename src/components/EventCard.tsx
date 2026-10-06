@@ -3,6 +3,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { eventPlace, eventSports, type Event } from "@/lib/events";
 import { formatEventDates, parseDate } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
+import { VirtualTag } from "@/components/VirtualTag";
 
 export async function EventCard({ event }: { event: Event }) {
   const t = await getTranslations("Event");
@@ -37,7 +38,10 @@ export async function EventCard({ event }: { event: Event }) {
             {eventSports(event).join(", ")}
           </p>
           <h3 className="mt-0.5 text-lg font-bold leading-snug break-words">{event.name}</h3>
-          <p className="text-muted">{place}</p>
+          <p className="flex flex-wrap items-center gap-2 text-muted">
+            {place}
+            {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
+          </p>
           {distances.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-1.5">
               {distances.map((label, index) => (

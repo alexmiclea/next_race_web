@@ -42,7 +42,7 @@ export default async function MapPage({ searchParams }: PageProps<"/harta">) {
         <p className="mt-2 text-lg text-muted">{t("tagline")}</p>
       </header>
 
-      <FilterForm action="/harta" filters={filters} {...options} />
+      <FilterForm action="/harta" filters={filters} virtualToggle={false} {...options} />
 
       <div className="mt-6">
         <RaceMap events={located} focusId={focusId} />
