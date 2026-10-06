@@ -13,7 +13,7 @@ describe("parseFilters", () => {
       }),
     ).toEqual({
       sport: "running",
-      county: "CJ",
+      counties: ["CJ"],
       distance: "long",
       from: "2027-04-01",
       to: "2027-04-30",
@@ -21,15 +21,15 @@ describe("parseFilters", () => {
   });
 
   it("returns no filters for an empty URL", () => {
-    expect(parseFilters({})).toEqual({});
+    expect(parseFilters({})).toEqual({ counties: [] });
     expect(hasFilters(parseFilters({}))).toBe(false);
   });
 
   it("ignores empty values, like an unselected dropdown", () => {
-    expect(parseFilters({ sport: "", county: "  " })).toEqual({});
+    expect(parseFilters({ sport: "", county: "  " })).toEqual({ counties: [] });
   });
 
-  it("uses the first value when a key is repeated", () => {
+  it("uses the first value when a single-value key is repeated", () => {
     expect(parseFilters({ sport: ["cycling", "running"] }).sport).toBe("cycling");
   });
 
@@ -39,11 +39,37 @@ describe("parseFilters", () => {
     expect(filters.from).toBeUndefined();
     expect(filters.to).toBeUndefined();
   });
+
+  describe("counties", () => {
+    it("reads several counties from repeated keys, as checkboxes submit them", () => {
+      expect(parseFilters({ county: ["CJ", "BV", "B"] }).counties).toEqual(["CJ", "BV", "B"]);
+    });
+
+    it("reads a comma-separated list", () => {
+      expect(parseFilters({ county: "CJ,BV" }).counties).toEqual(["CJ", "BV"]);
+    });
+
+    it("normalises case and spaces, and removes duplicates", () => {
+      expect(parseFilters({ county: ["cj", " BV ", "CJ"] }).counties).toEqual(["CJ", "BV"]);
+    });
+
+    it("drops values that aren't county codes", () => {
+      expect(parseFilters({ county: ["CJ", "Cluj", "123", ""] }).counties).toEqual(["CJ"]);
+    });
+  });
 });
 
 describe("hasFilters", () => {
   it("is true when any filter is set", () => {
-    expect(hasFilters({ county: "CJ" })).toBe(true);
+    expect(hasFilters({ counties: [], sport: "running" })).toBe(true);
+  });
+
+  it("is true when only counties are selected", () => {
+    expect(hasFilters({ counties: ["CJ"] })).toBe(true);
+  });
+
+  it("is false with no counties and nothing else", () => {
+    expect(hasFilters({ counties: [] })).toBe(false);
   });
 });
 

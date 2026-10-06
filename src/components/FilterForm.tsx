@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { CountySelect } from "@/components/CountySelect";
 import { DateField } from "@/components/DateField";
 import type { County, Sport } from "@/lib/events";
 import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
@@ -45,18 +46,6 @@ export async function FilterForm({
         </label>
 
         <label className={field}>
-          {t("county")}
-          <select name="county" defaultValue={filters.county ?? ""} className={control}>
-            <option value="">{t("anyCounty")}</option>
-            {counties.map((county) => (
-              <option key={county.code} value={county.code}>
-                {county.name}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className={`${field} col-span-2 sm:col-span-1`}>
           {t("distance")}
           <select name="distance" defaultValue={filters.distance ?? ""} className={control}>
             <option value="">{t("any")}</option>
@@ -67,6 +56,16 @@ export async function FilterForm({
             ))}
           </select>
         </label>
+
+        {/* Not a <label>: the dropdown holds many inputs. CountySelect labels itself. */}
+        <div className={`${field} col-span-2 sm:col-span-1`}>
+          <span aria-hidden>{t("county")}</span>
+          <CountySelect
+            counties={counties}
+            defaultSelected={filters.counties}
+            className={control}
+          />
+        </div>
 
         <label className={field}>
           {t("from")}

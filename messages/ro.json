@@ -29,6 +29,10 @@
     "pickDate": "Alege data",
     "any": "Toate",
     "anyCounty": "Toate județele",
+    "moreCounties": "+{count}",
+    "searchCounty": "Caută județul",
+    "clearCounties": "Șterge",
+    "noCountyMatch": "Niciun județ găsit",
     "apply": "Aplică",
     "reset": "Resetează",
     "distances": {
