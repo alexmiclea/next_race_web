@@ -1,13 +1,14 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { AutoApplyForm } from "@/components/AutoApplyForm";
 import { CountySelect } from "@/components/CountySelect";
 import { DateField } from "@/components/DateField";
 import type { County, Sport } from "@/lib/events";
 import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
 
 /**
- * Plain GET form: filters end up in the URL, so it works without JavaScript and
- * filtered views can be bookmarked or shared.
+ * Filters live in the URL, so filtered views can be bookmarked or shared. The form
+ * applies itself as filters change; without JavaScript it is a plain GET form.
  */
 export async function FilterForm({
   action,
@@ -27,10 +28,13 @@ export async function FilterForm({
     "h-10 w-full min-w-0 rounded-lg border border-border bg-background px-2 text-base font-normal text-foreground";
 
   return (
-    <form
+    <AutoApplyForm
+      // A fresh form whenever the filters change, so its fields match the URL after
+      // "reset" or the back button (the fields keep their own state otherwise).
+      key={JSON.stringify(filters)}
       action={action}
+      label={t("title")}
       className="rounded-xl border border-border bg-surface p-4"
-      aria-label={t("title")}
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <label className={field}>
@@ -88,19 +92,22 @@ export async function FilterForm({
         </label>
       </div>
 
-      <div className="mt-4 flex items-center gap-3">
+      {/* Once the form applies itself (data-enhanced), only the reset link remains. */}
+      <div
+        className={`mt-4 flex items-center gap-3 ${hasFilters(filters) ? "" : "group-data-[enhanced]:hidden"}`}
+      >
         <button
           type="submit"
-          className="h-10 rounded-lg bg-accent px-5 font-semibold text-on-accent hover:opacity-90"
+          className="h-10 rounded-lg bg-accent px-5 font-semibold text-on-accent hover:opacity-90 group-data-[enhanced]:hidden"
         >
           {t("apply")}
         </button>
         {hasFilters(filters) && (
-          <Link href={action} className="text-sm font-medium text-muted underline">
+          <Link href={action} scroll={false} className="text-sm font-medium text-muted underline">
             {t("reset")}
           </Link>
         )}
       </div>
-    </form>
+    </AutoApplyForm>
   );
 }

@@ -49,6 +49,18 @@ export function parseFilters(params: SearchParams): Filters {
   };
 }
 
+/**
+ * Query string for the filter form's current values, leaving out empty fields so
+ * URLs stay short ("sport=running&county=CJ&county=BV").
+ */
+export function filtersQuery(data: FormData): string {
+  const params = new URLSearchParams();
+  for (const [key, value] of data) {
+    if (typeof value === "string" && value.trim() !== "") params.append(key, value.trim());
+  }
+  return params.toString();
+}
+
 export function hasFilters(filters: Filters): boolean {
   const { counties, ...rest } = filters;
   return counties.length > 0 || Object.values(rest).some(Boolean);

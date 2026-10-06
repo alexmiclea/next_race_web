@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { hasFilters, parseFilters, today } from "./filters";
+import { filtersQuery, hasFilters, parseFilters, today } from "./filters";
 
 describe("parseFilters", () => {
   it("reads every filter from the URL", () => {
@@ -56,6 +56,38 @@ describe("parseFilters", () => {
     it("drops values that aren't county codes", () => {
       expect(parseFilters({ county: ["CJ", "Cluj", "123", ""] }).counties).toEqual(["CJ"]);
     });
+  });
+});
+
+describe("filtersQuery", () => {
+  function formData(entries: [string, string][]): FormData {
+    const data = new FormData();
+    for (const [key, value] of entries) data.append(key, value);
+    return data;
+  }
+
+  it("keeps filled-in fields and repeated counties", () => {
+    expect(
+      filtersQuery(formData([["sport", "running"], ["county", "CJ"], ["county", "BV"]])),
+    ).toBe("sport=running&county=CJ&county=BV");
+  });
+
+  it("leaves out empty fields", () => {
+    expect(filtersQuery(formData([["sport", ""], ["distance", " "], ["from", "2027-04-01"]]))).toBe(
+      "from=2027-04-01",
+    );
+  });
+
+  it("is empty when nothing is set", () => {
+    expect(filtersQuery(formData([["sport", ""]]))).toBe("");
+  });
+
+  it("round-trips through parseFilters", () => {
+    const query = filtersQuery(formData([["county", "CJ"], ["county", "B"], ["distance", "long"]]));
+    const params = new URLSearchParams(query);
+    expect(parseFilters({ county: params.getAll("county"), distance: params.get("distance")! })).toEqual(
+      { counties: ["CJ", "B"], distance: "long" },
+    );
   });
 });
 
