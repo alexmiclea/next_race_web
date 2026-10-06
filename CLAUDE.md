@@ -26,7 +26,7 @@ Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `
 
 ### Data model
 
-- `events` — one event (name, `slug` (set once by a DB trigger, never changes), dates, city, county, `latitude`/`longitude`, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
+- `events` — one event (name, `slug` (set once by a DB trigger, never changes), dates, city, county, `latitude`/`longitude`, links, `description` (+ `description_evidence` quotes, `description_source_url`), review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
 - `races` — one per distance/category of an event (`label`, `distance_km`, `sport_slug`).
 - `sports`, `counties` — reference data. Sport names live in the `sports` table, not in translation files.
 
@@ -44,6 +44,7 @@ Record decisions here so they aren't re-discussed in later sessions.
 - Race data sourcing (business plan: become the platform organizers submit to; until then, fill the database by scraping):
   - Scraped races and, later, organizer submissions go into one review queue (`pending` / `approved` / `rejected`). Only approved races are public. The owner manually reviews every entry.
   - Scrape facts only (name, date, location, distances, registration link). Don't copy descriptions or photos verbatim. Respect `robots.txt` and terms of use. Prefer organizers' own sites over other race-listing sites (EU database right; future competitors).
+  - Descriptions: never copied. `npm run describe` has Claude (claude-opus-5-5) write 2-3 Romanian sentences using only facts stated on the organizer's page - no inference, no dates/prices/distances. Each fact must come with verbatim evidence quotes; code rejects the description if any quote isn't on the page, or if it mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages are skipped (login wall).
   - Always store and show the source URL for each race.
   - Detect duplicates (similar name + same date + city) across sources and runs; update or flag instead of creating duplicates.
   - The scraper runs on a schedule via GitHub Actions (not Vercel Cron), one source at a time.
@@ -92,6 +93,7 @@ Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly b
 - `npm install` — install dependencies
 - `npm run scrape` — scrape all sources into `scraper/output/<hostname>.json` and `.csv` (git-ignored), and into Supabase as `pending` events when `scraper/.env` has `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (see `scraper/.env.example`). Re-runs refresh events that are still pending; approved/rejected events are never changed.
 - `npm run geocode` — fill in map coordinates (OpenStreetMap Nominatim, max 1 request/second) for events with a city but no coordinates; also runs automatically after `npm run scrape`
+- `npm run describe` — write fact-only AI descriptions for races without one (`-- --force` rewrites all); needs `ANTHROPIC_API_KEY` in `scraper/.env`; costs a few cents per race
 - `npm test` — parser tests
 - `npm run typecheck` — TypeScript check
 

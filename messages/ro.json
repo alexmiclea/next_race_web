@@ -65,6 +65,9 @@
     "register": "Înscriere",
     "source": "Sursa informației",
     "showOnMap": "Vezi pe hartă",
+    "about": "Despre concurs",
+    "aiSummary": "Rezumat generat automat, doar din informațiile de pe site-ul organizatorului.",
+    "aiSummarySource": "Vezi pagina sursă",
     "checkOrganizer": "Informațiile sunt preluate automat și pot fi incomplete. Verifică detaliile pe site-ul organizatorului înainte de înscriere."
   },
   "Map": {

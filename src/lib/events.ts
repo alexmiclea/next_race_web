@@ -28,6 +28,9 @@ export type Event = {
   website_url: string | null;
   registration_url: string | null;
   source_url: string | null;
+  /** Short fact-only summary written by AI from the organizer's page (scraper: npm run describe). */
+  description: string | null;
+  description_source_url: string | null;
   counties: { name: string } | null;
   races: Race[];
 };
@@ -38,6 +41,7 @@ export type County = { code: string; name: string };
 const EVENT_FIELDS = `
   id, slug, name, organizer, start_date, end_date, start_time, city, county_code, is_virtual,
   latitude, longitude, website_url, registration_url, source_url,
+  description, description_source_url,
   counties(name),
   races(id, label, distance_km, sort_order, sport_slug, sports(name_ro))
 `;

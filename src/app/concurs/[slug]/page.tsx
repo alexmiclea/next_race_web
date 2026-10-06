@@ -13,7 +13,9 @@ export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">)
   const place = eventPlace(event);
   return {
     title: `${event.name} — Next Race`,
-    description: [event.start_date, place, eventSports(event).join(", ")].filter(Boolean).join(" · "),
+    description:
+      event.description ??
+      [event.start_date, place, eventSports(event).join(", ")].filter(Boolean).join(" · "),
   };
 }
 
@@ -45,6 +47,26 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
         </p>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
       </header>
+
+      {event.description && (
+        <section aria-labelledby="about-heading" className="mt-6">
+          <h2 id="about-heading" className="sr-only">
+            {t("about")}
+          </h2>
+          <p className="text-lg leading-relaxed">{event.description}</p>
+          <p className="mt-2 text-xs text-muted">
+            {t("aiSummary")}
+            {event.description_source_url && (
+              <>
+                {" "}
+                <a href={event.description_source_url} rel="noopener" className="underline">
+                  {t("aiSummarySource")}
+                </a>
+              </>
+            )}
+          </p>
+        </section>
+      )}
 
       <dl className="mt-6">
         <div className={row}>
