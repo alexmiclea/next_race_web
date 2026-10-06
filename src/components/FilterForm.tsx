@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { DateField } from "@/components/DateField";
 import type { County, Sport } from "@/lib/events";
 import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
 
@@ -69,12 +70,22 @@ export async function FilterForm({
 
         <label className={field}>
           {t("from")}
-          <input type="date" name="from" defaultValue={filters.from} className={control} />
+          <DateField
+            name="from"
+            defaultValue={filters.from}
+            placeholder={t("pickDate")}
+            className={control}
+          />
         </label>
 
         <label className={field}>
           {t("to")}
-          <input type="date" name="to" defaultValue={filters.to} className={control} />
+          <DateField
+            name="to"
+            defaultValue={filters.to}
+            placeholder={t("pickDate")}
+            className={control}
+          />
         </label>
       </div>
 

@@ -46,6 +46,25 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+/* DateField draws its own calendar icon. The native one is made invisible but
+   stretched over the whole input, so tapping anywhere still opens the picker. */
+.date-field {
+  position: relative;
+}
+.date-field::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  opacity: 0;
+  cursor: pointer;
+}
+/* iOS Safari centres the date and collapses empty inputs. */
+.date-field::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 1.5em;
+}
+
 :focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
