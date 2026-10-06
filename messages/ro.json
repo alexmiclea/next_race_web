@@ -66,7 +66,9 @@
     "dataTitle": "De unde vin datele",
     "data": "Concursurile sunt preluate din calendare publice și verificate manual înainte de publicare. Fiecare concurs are un link către sursa informației și către site-ul organizatorului.",
     "organizersTitle": "Ești organizator?",
-    "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale."
+    "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale. Până atunci, scrie-ne dacă vrei să corectăm sau să adăugăm un eveniment.",
+    "contactTitle": "Contact",
+    "contact": "Pentru corecturi, sugestii sau parteneriate, scrie-ne la"
   },
   "NotFound": {
     "title": "Pagina nu există",

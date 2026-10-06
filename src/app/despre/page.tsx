@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { CONTACT_EMAIL } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("About");
@@ -18,6 +19,14 @@ export default async function AboutPage() {
 
       <h2 className="mt-8 text-xl font-bold">{t("organizersTitle")}</h2>
       <p className="mt-2 text-muted">{t("organizers")}</p>
+
+      <h2 className="mt-8 text-xl font-bold">{t("contactTitle")}</h2>
+      <p className="mt-2 text-muted">
+        {t("contact")}{" "}
+        <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-accent underline">
+          {CONTACT_EMAIL}
+        </a>
+      </p>
     </main>
   );
 }
