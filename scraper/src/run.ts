@@ -1,10 +1,12 @@
 /**
- * Scrapes every website in sources.ts into scraper/output/ for manual review.
+ * Scrapes every website in sources.ts into scraper/output/ and, when scraper/.env has
+ * Supabase credentials, into the database review queue.
  * Usage: npm run scrape
  */
 import { fileURLToPath } from 'node:url';
 import { fetchPage } from './lib/fetch.ts';
 import { writeOutput } from './lib/output.ts';
+import { connect, saveRaces } from './lib/supabase.ts';
 import { parseBulletList } from './parsers/bullet-list.ts';
 import { SOURCES } from './sources.ts';
 import type { PageContext, ParserName, Source, SourceResult } from './types.ts';
@@ -19,11 +21,21 @@ const OUTPUT_DIR = fileURLToPath(new URL('../output', import.meta.url));
 const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Europe/Bucharest' }).format(new Date());
 const thisYear = Number(today.slice(0, 4));
 
+const db = connect();
+if (!db) console.log('No Supabase credentials in scraper/.env: writing files only.\n');
+
 for (const source of SOURCES) {
   const result = await scrapeSource(source);
   const name = new URL(source.url).hostname;
   await writeOutput(OUTPUT_DIR, name, result.races);
   report(name, result);
+  if (db) {
+    const saved = await saveRaces(db, result.races);
+    console.log(
+      `  Supabase: ${saved.created} new, ${saved.updated} refreshed (still pending), ` +
+        `${saved.keptReviewed} already reviewed (left unchanged)`,
+    );
+  }
 }
 console.log(`Output: ${OUTPUT_DIR}`);
 

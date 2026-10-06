@@ -7,11 +7,12 @@
     "node": ">=23.6"
   },
   "scripts": {
-    "scrape": "node src/run.ts",
+    "scrape": "node --env-file-if-exists=.env src/run.ts",
     "test": "node --test test/parse.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.117.2",
     "cheerio": "^1.0.0"
   },
   "devDependencies": {

@@ -85,8 +85,8 @@ Website (repo root; needs `.env.local`):
 Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly by Node — no build step):
 
 - `npm install` — install dependencies
-- `npm run scrape` — scrape all sources into `scraper/output/<hostname>.json` and `.csv` (git-ignored) for manual review
+- `npm run scrape` — scrape all sources into `scraper/output/<hostname>.json` and `.csv` (git-ignored), and into Supabase as `pending` events when `scraper/.env` has `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (see `scraper/.env.example`). Re-runs refresh events that are still pending; approved/rejected events are never changed.
 - `npm test` — parser tests
 - `npm run typecheck` — TypeScript check
 
-To add a website, add an entry to `scraper/src/sources.ts`; add a parser only if its layout is new. Until Supabase exists, the output files are the review queue; later the scraper will write `pending` rows to Supabase instead.
+To add a website, add an entry to `scraper/src/sources.ts`; add a parser only if its layout is new. Review happens in the Supabase table editor: set `events.status` to `approved` or `rejected`; parser warnings are in `review_note`. Events whose distances weren't found get one race labelled `?`.
