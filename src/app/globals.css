@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* Tells the browser which theme its built-in controls (date picker icon,
+     dropdowns, scrollbars) should match. */
+  color-scheme: light;
   --background: #ffffff;
   --surface: #f6f7f9;
   --foreground: #14171c;
@@ -25,6 +28,7 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
+    color-scheme: dark;
     --background: #0e1116;
     --surface: #171b22;
     --foreground: #e8eaed;
