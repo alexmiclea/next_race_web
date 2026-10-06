@@ -1,6 +1,9 @@
 @import "tailwindcss";
 
 :root {
+  /* Tells the browser which theme its built-in controls (date picker icon,
+     dropdowns, scrollbars) should match. */
+  color-scheme: light;
   --background: #ffffff;
   --surface: #f6f7f9;
   --foreground: #14171c;
@@ -23,8 +26,23 @@
   --font-sans: var(--font-geist-sans);
 }
 
+/* Dark theme: chosen in the theme switch (data-theme="dark"), or following the
+   device when no theme is chosen. The two blocks must stay identical. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --background: #0e1116;
+  --surface: #171b22;
+  --foreground: #e8eaed;
+  --muted: #9ba3ae;
+  --border: #2a303a;
+  --accent: #fb8a4c;
+  --accent-soft: #2a1a10;
+  --on-accent: #1a0d05;
+}
+
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
     --background: #0e1116;
     --surface: #171b22;
     --foreground: #e8eaed;
@@ -40,6 +58,25 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* DateField draws its own calendar icon. The native one is made invisible but
+   stretched over the whole input, so tapping anywhere still opens the picker. */
+.date-field {
+  position: relative;
+}
+.date-field::-webkit-calendar-picker-indicator {
+  position: absolute;
+  inset: 0;
+  width: auto;
+  height: auto;
+  opacity: 0;
+  cursor: pointer;
+}
+/* iOS Safari centres the date and collapses empty inputs. */
+.date-field::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 1.5em;
 }
 
 :focus-visible {

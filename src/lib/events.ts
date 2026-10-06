@@ -59,7 +59,7 @@ export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
     .order("name");
 
   if (filters.to) query = query.lte("start_date", filters.to);
-  if (filters.county) query = query.eq("county_code", filters.county);
+  if (filters.counties.length > 0) query = query.in("county_code", filters.counties);
   if (filters.sport) query = query.eq("match.sport_slug", filters.sport);
   if (filters.distance) {
     const { min, max } = DISTANCE_BUCKETS[filters.distance];
