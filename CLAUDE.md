@@ -12,7 +12,7 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Draft site: race list with filters (`/`), race detail (`/concurs/[id]`), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), SEO-friendly slugs (detail URLs use the event UUID).
+Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), custom domain.
 
 ### Layout
 
@@ -26,7 +26,7 @@ Draft site: race list with filters (`/`), race detail (`/concurs/[id]`), map (`/
 
 ### Data model
 
-- `events` — one event (name, dates, city, county, `latitude`/`longitude`, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
+- `events` — one event (name, `slug` (set once by a DB trigger, never changes), dates, city, county, `latitude`/`longitude`, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
 - `races` — one per distance/category of an event (`label`, `distance_km`, `sport_slug`).
 - `sports`, `counties` — reference data. Sport names live in the `sports` table, not in translation files.
 
