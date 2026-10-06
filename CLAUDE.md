@@ -71,6 +71,8 @@ Resolve these before building much; move each to **Decisions** once settled.
 
 - Keep the site fast, mobile-first, and accessible.
 - Make small, focused changes; one feature per branch / pull request.
+- Write unit tests with every change (Vitest + React Testing Library for the website, `node:test` for the scraper). Tests live next to the code as `*.test.ts(x)`. Async Server Components can't be unit-tested; keep their logic in plain functions in `src/lib/` and test those.
+- Run `npm test`, `npm run typecheck` and `npm run lint` before committing.
 - Don't commit secrets or API keys.
 - No Vercel-specific services (Vercel Postgres/KV/Blob, Edge Config, Vercel Analytics, Vercel Cron, etc.) — keep the app portable. Use Supabase or portable alternatives instead.
 
@@ -83,6 +85,7 @@ Website (repo root; needs `.env.local`):
 - `npm run build` — production build
 - `npm run lint` — ESLint
 - `npm run typecheck` — generate route types, then TypeScript check
+- `npm test` — unit tests (Vitest); `npm run test:watch` re-runs on save
 
 Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly by Node — no build step):
 

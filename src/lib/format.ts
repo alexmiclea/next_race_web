@@ -1,4 +1,4 @@
-import { getFormatter } from "next-intl/server";
+import type { getFormatter } from "next-intl/server";
 import type { Event } from "@/lib/events";
 
 type Formatter = Awaited<ReturnType<typeof getFormatter>>;
