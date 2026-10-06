@@ -10,7 +10,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const [events, options] = await Promise.all([getUpcomingEvents(filters), getFilterOptions()]);
 
   return (
-    <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:py-10">
+    <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
       <header className="mb-6">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
         <p className="mt-2 text-lg text-muted">{t("tagline")}</p>
@@ -27,7 +27,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
             {t("empty")}
           </p>
         ) : (
-          <ul className="grid gap-3 md:grid-cols-2">
+          <ul className="flex flex-col gap-3">
             {events.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}

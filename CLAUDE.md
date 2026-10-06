@@ -12,7 +12,7 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Draft site: race list with filters (`/`), race detail (`/concurs/[id]`), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Not deployed yet. Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), SEO-friendly slugs (detail URLs use the event UUID).
+Draft site: race list with filters (`/`), race detail (`/concurs/[id]`), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), SEO-friendly slugs (detail URLs use the event UUID).
 
 ### Layout
 

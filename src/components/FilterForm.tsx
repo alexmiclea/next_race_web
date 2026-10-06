@@ -30,7 +30,7 @@ export async function FilterForm({
       className="rounded-xl border border-border bg-surface p-4"
       aria-label={t("title")}
     >
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
         <label className={field}>
           {t("sport")}
           <select name="sport" defaultValue={filters.sport ?? ""} className={control}>
@@ -55,7 +55,7 @@ export async function FilterForm({
           </select>
         </label>
 
-        <label className={`${field} col-span-2 md:col-span-1`}>
+        <label className={`${field} col-span-2 sm:col-span-1`}>
           {t("distance")}
           <select name="distance" defaultValue={filters.distance ?? ""} className={control}>
             <option value="">{t("any")}</option>
