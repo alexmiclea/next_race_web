@@ -6,6 +6,7 @@
 import { fileURLToPath } from 'node:url';
 import { fetchPage } from './lib/fetch.ts';
 import { writeOutput } from './lib/output.ts';
+import { runGeocoding } from './geocode.ts';
 import { connect, saveRaces } from './lib/supabase.ts';
 import { parseBulletList } from './parsers/bullet-list.ts';
 import { SOURCES } from './sources.ts';
@@ -37,6 +38,7 @@ for (const source of SOURCES) {
     );
   }
 }
+if (db) await runGeocoding(db);
 console.log(`Output: ${OUTPUT_DIR}`);
 
 async function scrapeSource(source: Source): Promise<SourceResult> {

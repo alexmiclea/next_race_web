@@ -3,13 +3,74 @@
     "title": "Next Race — concursuri de alergare, ciclism, înot și triatlon în România",
     "description": "Găsește următorul concurs: alergare, ciclism, înot și triatlon în toată România. Dată, locație, distanțe și înscriere."
   },
+  "Nav": {
+    "races": "Concursuri",
+    "map": "Hartă",
+    "about": "Despre",
+    "home": "Next Race — pagina principală"
+  },
+  "Footer": {
+    "tagline": "Calendarul concursurilor de anduranță din România.",
+    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului."
+  },
+  "Filters": {
+    "title": "Filtrează",
+    "sport": "Sport",
+    "county": "Județ",
+    "distance": "Distanță",
+    "from": "De la",
+    "to": "Până la",
+    "any": "Toate",
+    "anyCounty": "Toate județele",
+    "apply": "Aplică",
+    "reset": "Resetează",
+    "distances": {
+      "short": "Sub 10 km",
+      "medium": "10 – 21 km",
+      "long": "21 – 42 km",
+      "ultra": "Ultra (peste 42 km)"
+    }
+  },
   "Home": {
-    "tagline": "Următorul tău concurs, în toată România.",
-    "upcoming": "Concursuri care urmează",
-    "empty": "Încă nu sunt concursuri publicate. Revino curând!",
-    "error": "Nu am putut încărca concursurile. Încearcă din nou mai târziu.",
+    "title": "Următorul tău concurs",
+    "tagline": "Alergare, ciclism, înot și triatlon — în toată România.",
+    "count": "{count, plural, =0 {Niciun concurs} one {# concurs} few {# concursuri} other {# de concursuri}}",
+    "empty": "Niciun concurs nu se potrivește filtrelor. Încearcă să le lărgești.",
+    "error": "Nu am putut încărca concursurile. Încearcă din nou mai târziu."
+  },
+  "Event": {
     "virtual": "Oriunde (virtual)",
+    "unknownPlace": "Locație necunoscută",
+    "details": "Detalii",
+    "back": "Înapoi la concursuri",
+    "when": "Când",
+    "where": "Unde",
+    "distances": "Distanțe",
+    "organizer": "Organizator",
+    "startTime": "Start la {time}",
     "website": "Site-ul concursului",
-    "source": "Sursa"
+    "register": "Înscriere",
+    "source": "Sursa informației",
+    "showOnMap": "Vezi pe hartă",
+    "checkOrganizer": "Informațiile sunt preluate automat și pot fi incomplete. Verifică detaliile pe site-ul organizatorului înainte de înscriere."
+  },
+  "Map": {
+    "title": "Harta concursurilor",
+    "tagline": "Concursurile care urmează, pe hartă.",
+    "notShown": "{count, plural, one {# concurs nu apare pe hartă} few {# concursuri nu apar pe hartă} other {# de concursuri nu apar pe hartă}} (virtuale sau fără locație).",
+    "attribution": "Hartă © contribuitorii OpenStreetMap"
+  },
+  "About": {
+    "title": "Despre Next Race",
+    "intro": "Next Race adună într-un singur loc concursurile de alergare, ciclism, înot și triatlon din România, ca să-ți găsești ușor următoarea cursă.",
+    "dataTitle": "De unde vin datele",
+    "data": "Concursurile sunt preluate din calendare publice și verificate manual înainte de publicare. Fiecare concurs are un link către sursa informației și către site-ul organizatorului.",
+    "organizersTitle": "Ești organizator?",
+    "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale."
+  },
+  "NotFound": {
+    "title": "Pagina nu există",
+    "text": "Concursul sau pagina căutată nu există sau nu mai este disponibilă.",
+    "back": "Înapoi la concursuri"
   }
 }

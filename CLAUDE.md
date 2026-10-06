@@ -12,11 +12,13 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Early stage. Next.js app scaffolded with a basic home page listing upcoming approved events from Supabase. Initial database schema in `supabase/migrations/`. Race scraper in `scraper/`.
+Draft site: race list with filters (`/`), race detail (`/concurs/[id]`), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Not deployed yet. Not built yet: admin review screen, scheduled scraping, organizer accounts, English, contact details, SEO-friendly slugs (detail URLs use the event UUID).
 
 ### Layout
 
 - `src/app/` — Next.js 16 App Router pages (`params` / `searchParams` / `cookies()` are async)
+- `src/lib/events.ts` — all event queries; `src/lib/filters.ts` — filters parsed from the URL (sport, county, distance bucket, from/to)
+- `src/components/` — `FilterForm` (plain GET form, works without JS), `EventCard`, `RaceMap` (client-only Leaflet), header/footer
 - `src/lib/supabase/server.ts` — Supabase client for server code (publishable key; RLS controls access)
 - `src/i18n/request.ts` + `messages/ro.json` — next-intl, Romanian only, no locale prefix in URLs yet
 - `supabase/migrations/` — SQL migrations, applied in order (for now: pasted into the Supabase SQL editor)
@@ -24,7 +26,7 @@ Early stage. Next.js app scaffolded with a basic home page listing upcoming appr
 
 ### Data model
 
-- `events` — one event (name, dates, city, county, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
+- `events` — one event (name, dates, city, county, `latitude`/`longitude`, links, review `status`, `source` / `source_url` / `external_key`). Public readers only see `approved` events (RLS).
 - `races` — one per distance/category of an event (`label`, `distance_km`, `sport_slug`).
 - `sports`, `counties` — reference data. Sport names live in the `sports` table, not in translation files.
 
@@ -86,6 +88,7 @@ Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly b
 
 - `npm install` — install dependencies
 - `npm run scrape` — scrape all sources into `scraper/output/<hostname>.json` and `.csv` (git-ignored), and into Supabase as `pending` events when `scraper/.env` has `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (see `scraper/.env.example`). Re-runs refresh events that are still pending; approved/rejected events are never changed.
+- `npm run geocode` — fill in map coordinates (OpenStreetMap Nominatim, max 1 request/second) for events with a city but no coordinates; also runs automatically after `npm run scrape`
 - `npm test` — parser tests
 - `npm run typecheck` — TypeScript check
 

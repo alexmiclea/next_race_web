@@ -8,6 +8,7 @@
   },
   "scripts": {
     "scrape": "node --env-file-if-exists=.env src/run.ts",
+    "geocode": "node --env-file=.env src/geocode.ts",
     "test": "node --test test/parse.test.ts",
     "typecheck": "tsc --noEmit"
   },

@@ -27,7 +27,7 @@ export async function saveRaces(db: SupabaseClient, races: ScrapedRace[]): Promi
 
   const { data: existing, error } = await db
     .from('events')
-    .select('id, source, external_key, status')
+    .select('id, source, external_key, status, city, county_code')
     .in('source', sources);
   if (error) throw new Error(`Loading existing events failed: ${error.message}`);
 
@@ -42,7 +42,10 @@ export async function saveRaces(db: SupabaseClient, races: ScrapedRace[]): Promi
 
     let eventId: string;
     if (known) {
-      await check(db.from('events').update(eventRow(race)).eq('id', known.id));
+      const moved = known.city !== race.city || known.county_code !== race.county;
+      // A changed place needs new coordinates; geocoding picks up rows with none.
+      const row = moved ? { ...eventRow(race), latitude: null, longitude: null } : eventRow(race);
+      await check(db.from('events').update(row).eq('id', known.id));
       await check(db.from('races').delete().eq('event_id', known.id));
       eventId = known.id;
       result.updated++;
