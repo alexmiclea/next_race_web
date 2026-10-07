@@ -41,11 +41,19 @@ export function readFavoritesFromDocument(): string[] {
   return parseFavorites(entry?.slice(FAVORITES_COOKIE.length + 1));
 }
 
-/** Browser event fired whenever the favourites change; `detail` is the new id list. */
+/** Browser event fired whenever the favourites change. */
 export const FAVORITES_EVENT = "favorites-change";
 
+export type FavoritesChange = {
+  ids: string[];
+  /** Change in upcoming favourites (the header count): +1, -1, or 0 for past races. */
+  upcomingDelta: number;
+};
+
 /** Saves the favourites in the cookie and tells the rest of the page (e.g. the count). */
-export function saveFavorites(ids: string[]): void {
+export function saveFavorites(ids: string[], upcomingDelta = 0): void {
   document.cookie = favoritesCookie(ids);
-  window.dispatchEvent(new CustomEvent<string[]>(FAVORITES_EVENT, { detail: ids }));
+  window.dispatchEvent(
+    new CustomEvent<FavoritesChange>(FAVORITES_EVENT, { detail: { ids, upcomingDelta } }),
+  );
 }

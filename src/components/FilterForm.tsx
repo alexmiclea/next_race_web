@@ -83,7 +83,8 @@ export async function FilterForm({
           <DateField
             name="from"
             defaultValue={filters.from}
-            placeholder={t("pickDate")}
+            // Empty means "from today": the list hides past races unless an earlier date is picked.
+            placeholder={t("today")}
             className={control}
           />
         </label>

@@ -18,7 +18,9 @@
     "tagline": "Concursurile pe care le-ai salvat cu steluța.",
     "empty": "Încă nu ai salvat niciun concurs. Apasă pe steluța de lângă un concurs ca să-l găsești aici.",
     "browse": "Vezi concursurile",
-    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont. Concursurile care au trecut dispar automat din listă.",
+    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont. Concursurile care au avut loc rămân la „Trecute”.",
+    "upcomingTitle": "Urmează",
+    "pastTitle": "Trecute",
     "add": "Adaugă {name} la favorite",
     "remove": "Scoate {name} de la favorite"
   },
@@ -61,6 +63,7 @@
     "from": "De la",
     "to": "Până la",
     "pickDate": "Alege data",
+    "today": "Azi",
     "any": "Toate",
     "anyCounty": "Toate județele",
     "moreCounties": "+{count}",
@@ -87,6 +90,8 @@
   "Event": {
     "virtual": "Oriunde",
     "virtualTag": "Virtual",
+    "pastTag": "A avut loc",
+    "pastNotice": "Acest concurs a avut loc. Pe site-ul organizatorului găsești de obicei rezultatele și informații despre ediția următoare.",
     "unknownPlace": "Locație necunoscută",
     "details": "Detalii",
     "back": "Înapoi la concursuri",

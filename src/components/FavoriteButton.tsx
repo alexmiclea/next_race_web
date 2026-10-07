@@ -14,6 +14,7 @@ export function FavoriteButton({
   eventName,
   initial,
   refreshOnChange = false,
+  upcoming = true,
   className = "",
 }: {
   eventId: string;
@@ -21,6 +22,8 @@ export function FavoriteButton({
   initial: boolean;
   /** Re-render the page after a change, e.g. so the favourites page drops the race. */
   refreshOnChange?: boolean;
+  /** Past races are saved too, but don't count in the header's favourites count. */
+  upcoming?: boolean;
   className?: string;
 }) {
   const t = useTranslations("Favorites");
@@ -29,8 +32,9 @@ export function FavoriteButton({
 
   function toggle() {
     const next = toggleFavorite(readFavoritesFromDocument(), eventId);
-    saveFavorites(next);
-    setSaved(next.includes(eventId.toLowerCase()));
+    const nowSaved = next.includes(eventId.toLowerCase());
+    saveFavorites(next, upcoming ? (nowSaved ? 1 : -1) : 0);
+    setSaved(nowSaved);
     if (refreshOnChange) router.refresh();
   }
 

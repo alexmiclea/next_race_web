@@ -55,7 +55,8 @@ Record decisions here so they aren't re-discussed in later sessions.
 
 - No mobile app for now. The website must be fully responsive (mobile-first) instead.
 - Cookies: only functional cookies the visitor asks for (`theme`, `favorites`, `cookie_notice`), listed on `/cookies`. So the banner (`CookieNotice`) is informational, not a consent form. Adding analytics, ads or any tracking requires turning it into a real accept/reject consent banner first, and updating `/cookies`.
-- Favourites: no accounts — event ids in the `favorites` cookie (max 100, `src/lib/favorites.ts`), read on the server to fill the stars and the `/favorite` page.
+- Favourites: no accounts — event ids in the `favorites` cookie (max 100, `src/lib/favorites.ts`), read on the server to fill the stars and the `/favorite` page ("Urmează" and "Trecute" sections). The header count shows upcoming favourites only.
+- Past races: no separate section. Lists start today by default; picking an earlier "De la" date shows past races too (`listStart` in `src/lib/filters.ts`). Past races get an "A avut loc" tag and a faded card; their page shows a notice and hides the registration button. The map always shows upcoming races only.
 - Supabase project: `ckzhgqaalsgwiomlbbdf` (EU). Env vars in `.env.local` (see `.env.example`). The secret key is server-only and must never be committed or pasted into chat.
 - The scraper is generic and reusable: websites are config entries in `scraper/src/sources.ts` (URL, sport, parser); parsers in `scraper/src/parsers/` handle page layouts, not specific sites. Don't write site-specific scraper code.
 - Scrape sources (add each new one here once checked):

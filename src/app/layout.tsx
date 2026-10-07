@@ -7,6 +7,7 @@ import { CookieNotice } from "@/components/CookieNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COOKIE_NOTICE_COOKIE, cookieNoticeSeen } from "@/lib/cookie-notice";
+import { countUpcoming } from "@/lib/events";
 import { FAVORITES_COOKIE, parseFavorites } from "@/lib/favorites";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
@@ -26,7 +27,11 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const locale = await getLocale();
   const cookieStore = await cookies();
   const theme = parseTheme(cookieStore.get(THEME_COOKIE)?.value);
-  const favoriteCount = parseFavorites(cookieStore.get(FAVORITES_COOKIE)?.value).length;
+  // Only upcoming favourites count; past ones stay saved but would inflate the number.
+  // The layout wraps every page, so a failed count just hides the badge.
+  const favoriteCount = await countUpcoming(
+    parseFavorites(cookieStore.get(FAVORITES_COOKIE)?.value),
+  ).catch(() => 0);
   const showCookieNotice = !cookieNoticeSeen(cookieStore.get(COOKIE_NOTICE_COOKIE)?.value);
   return (
     <html

@@ -1,5 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
-import { DISTANCE_BUCKETS, today, type Filters } from "@/lib/filters";
+import { DISTANCE_BUCKETS, listStart, today, type Filters } from "@/lib/filters";
 import { eventLookup } from "@/lib/paths";
 
 export type Race = {
@@ -47,10 +47,14 @@ const EVENT_FIELDS = `
 `;
 
 /**
- * Upcoming approved events matching the filters, soonest first.
- * Row-level security already hides events that aren't approved.
+ * Approved events matching the filters, in date order. Starts today unless the "De la"
+ * filter reaches back into past races (see listStart). Row-level security already
+ * hides events that aren't approved.
  */
-export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
+export async function getEvents(
+  filters: Filters,
+  { allowPast = true }: { allowPast?: boolean } = {},
+): Promise<Event[]> {
   const supabase = await createClient();
 
   // `match` is a second, inner-joined copy of races used only for filtering, so an event
@@ -58,7 +62,7 @@ export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
   let query = supabase
     .from("events")
     .select(`${EVENT_FIELDS}, match:races!inner(sport_slug, distance_km)`)
-    .gte("end_date", filters.from && filters.from > today() ? filters.from : today())
+    .gte("end_date", listStart(filters, today(), { allowPast }))
     .order("start_date")
     .order("name");
 
@@ -77,20 +81,32 @@ export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
   return data.map(sortRaces);
 }
 
-/** Upcoming approved events with the given ids (e.g. favourites), soonest first. */
-export async function getUpcomingEventsByIds(ids: string[]): Promise<Event[]> {
+/** Approved events with the given ids (e.g. favourites), past and upcoming, in date order. */
+export async function getEventsByIds(ids: string[]): Promise<Event[]> {
   if (ids.length === 0) return [];
   const supabase = await createClient();
   const { data, error } = await supabase
     .from("events")
     .select(EVENT_FIELDS)
     .in("id", ids)
-    .gte("end_date", today())
     .order("start_date")
     .order("name")
     .returns<Event[]>();
   if (error) throw new Error(`Loading events failed: ${error.message}`);
   return data.map(sortRaces);
+}
+
+/** How many of the given ids are upcoming approved events (the header's favourites count). */
+export async function countUpcoming(ids: string[]): Promise<number> {
+  if (ids.length === 0) return 0;
+  const supabase = await createClient();
+  const { count, error } = await supabase
+    .from("events")
+    .select("id", { count: "exact", head: true })
+    .in("id", ids)
+    .gte("end_date", today());
+  if (error) throw new Error(`Counting events failed: ${error.message}`);
+  return count ?? 0;
 }
 
 /**

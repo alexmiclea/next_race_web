@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { EventCard } from "@/components/EventCard";
 import { FilterForm } from "@/components/FilterForm";
-import { getFilterOptions, getUpcomingEvents } from "@/lib/events";
+import { getEvents, getFilterOptions } from "@/lib/events";
 import { getFavoriteIds } from "@/lib/favorites-server";
 import { parseFilters } from "@/lib/filters";
 
@@ -9,7 +9,7 @@ export default async function Home({ searchParams }: PageProps<"/">) {
   const t = await getTranslations("Home");
   const filters = parseFilters(await searchParams);
   const [events, options, favorites] = await Promise.all([
-    getUpcomingEvents(filters),
+    getEvents(filters),
     getFilterOptions(),
     getFavoriteIds(),
   ]);

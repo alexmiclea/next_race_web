@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { FAVORITES_EVENT } from "@/lib/favorites";
+import { FAVORITES_EVENT, type FavoritesChange } from "@/lib/favorites";
 
-/** "Favorite" link with a live count badge of saved races. */
+/** "Favorite" link with a live count badge of saved upcoming races. */
 export function FavoritesLink({
   initialCount,
   className,
@@ -17,7 +17,10 @@ export function FavoritesLink({
   const [count, setCount] = useState(initialCount);
 
   useEffect(() => {
-    const update = (event: Event) => setCount((event as CustomEvent<string[]>).detail.length);
+    const update = (event: Event) => {
+      const { upcomingDelta } = (event as CustomEvent<FavoritesChange>).detail;
+      setCount((current) => Math.max(0, current + upcomingDelta));
+    };
     window.addEventListener(FAVORITES_EVENT, update);
     return () => window.removeEventListener(FAVORITES_EVENT, update);
   }, []);

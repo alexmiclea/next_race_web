@@ -2,8 +2,10 @@ import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { SportTag } from "@/components/SportTag";
+import { PastTag } from "@/components/PastTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, type Event } from "@/lib/events";
+import { isPast, today } from "@/lib/filters";
 import { formatEventDates, parseDate } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
 import { eventSportList, sportClass } from "@/lib/sports";
@@ -26,12 +28,13 @@ export async function EventCard({
   const sports = eventSportList(event.races);
   // The card takes the colour of the event's main sport (listed first).
   const colour = sportClass(sports[0]?.slug ?? "");
+  const past = isPast(event, today());
 
   return (
     <li className={`relative ${colour}`}>
       <Link
         href={eventPath(event)}
-        className="flex gap-4 rounded-xl border border-border bg-background p-4 pr-14 transition hover:border-sport hover:shadow-sm"
+        className={`flex gap-4 rounded-xl border border-border bg-background p-4 pr-14 transition hover:border-sport hover:shadow-sm ${past ? "opacity-70 hover:opacity-100" : ""}`}
       >
         {/* Calendar-style date block; the full date is in the <time> below for screen readers. */}
         <div
@@ -57,6 +60,7 @@ export async function EventCard({
           <p className="flex flex-wrap items-center gap-2 text-muted">
             {place}
             {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
+            {past && <PastTag label={t("pastTag")} />}
           </p>
           {distances.length > 0 && (
             <ul className="mt-2 flex flex-wrap gap-1.5">
@@ -78,6 +82,7 @@ export async function EventCard({
         eventName={event.name}
         initial={isFavorite}
         refreshOnChange={refreshOnFavoriteChange}
+        upcoming={!past}
         className="absolute right-2 top-2"
       />
     </li>

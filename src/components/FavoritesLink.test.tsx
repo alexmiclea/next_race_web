@@ -35,11 +35,24 @@ describe("FavoritesLink", () => {
     expect(screen.getByText("3 concursuri salvate")).toBeTruthy();
   });
 
-  it("updates live when a star is tapped anywhere on the page", () => {
+  it("updates live when a star on an upcoming race is tapped", () => {
     const link = renderLink(1);
-    act(() => saveFavorites([A, B]));
+    act(() => saveFavorites([A, B], 1));
     expect(screen.getByText("2 concursuri salvate")).toBeTruthy();
-    act(() => saveFavorites([]));
+    act(() => saveFavorites([A], -1));
+    act(() => saveFavorites([], -1));
+    expect(link.textContent).toBe("Favorite");
+  });
+
+  it("ignores changes to past races, which don't count", () => {
+    renderLink(2);
+    act(() => saveFavorites([A, B], 0));
+    expect(screen.getByText("2 concursuri salvate")).toBeTruthy();
+  });
+
+  it("never goes below zero", () => {
+    const link = renderLink(0);
+    act(() => saveFavorites([], -1));
     expect(link.textContent).toBe("Favorite");
   });
 });

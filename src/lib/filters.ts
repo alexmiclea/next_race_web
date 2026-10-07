@@ -83,6 +83,26 @@ export function hasFilters(filters: Filters): boolean {
   return counties.length > 0 || Object.values(rest).some(Boolean);
 }
 
+/**
+ * First day a race list covers (races ending before it are left out). By default
+ * today, so past races are hidden; a "De la" date earlier than today reaches back
+ * into past races. Pages that only make sense for upcoming races (the map) pass
+ * `allowPast: false`, so they never start before today.
+ */
+export function listStart(
+  filters: Pick<Filters, "from">,
+  todayDate: string,
+  { allowPast = true }: { allowPast?: boolean } = {},
+): string {
+  if (!filters.from) return todayDate;
+  return allowPast || filters.from > todayDate ? filters.from : todayDate;
+}
+
+/** A race is past once its last day is before today (Romanian time). */
+export function isPast(event: { end_date: string }, todayDate: string): boolean {
+  return event.end_date < todayDate;
+}
+
 /** Today's date in Romanian time, as YYYY-MM-DD. */
 export function today(): string {
   return new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Bucharest" }).format(new Date());

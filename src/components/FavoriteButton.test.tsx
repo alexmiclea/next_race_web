@@ -2,7 +2,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 import { NextIntlClientProvider } from "next-intl";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import messages from "../../messages/ro.json";
-import { favoritesCookie, readFavoritesFromDocument } from "@/lib/favorites";
+import { FAVORITES_EVENT, favoritesCookie, readFavoritesFromDocument, type FavoritesChange } from "@/lib/favorites";
 import { FavoriteButton } from "./FavoriteButton";
 
 const refresh = vi.fn();
@@ -17,7 +17,7 @@ afterEach(() => {
   document.cookie = "favorites=; Path=/; Max-Age=0";
 });
 
-function renderButton(initial: boolean, refreshOnChange = false) {
+function renderButton(initial: boolean, refreshOnChange = false, upcoming = true) {
   render(
     <NextIntlClientProvider locale="ro" messages={messages}>
       <FavoriteButton
@@ -25,6 +25,7 @@ function renderButton(initial: boolean, refreshOnChange = false) {
         eventName="Cheile Turzii Race"
         initial={initial}
         refreshOnChange={refreshOnChange}
+        upcoming={upcoming}
       />
     </NextIntlClientProvider>,
   );
@@ -55,6 +56,22 @@ describe("FavoriteButton", () => {
     document.cookie = favoritesCookie([B]);
     fireEvent.click(button);
     expect(readFavoritesFromDocument()).toEqual([B, A]);
+  });
+
+  it("tells the header count +1 / -1 for an upcoming race, 0 for a past one", () => {
+    const deltas: number[] = [];
+    const listen = (event: Event) =>
+      deltas.push((event as CustomEvent<FavoritesChange>).detail.upcomingDelta);
+    window.addEventListener(FAVORITES_EVENT, listen);
+
+    const upcoming = renderButton(false);
+    fireEvent.click(upcoming);
+    fireEvent.click(upcoming);
+    cleanup();
+    fireEvent.click(renderButton(false, false, false));
+
+    window.removeEventListener(FAVORITES_EVENT, listen);
+    expect(deltas).toEqual([1, -1, 0]);
   });
 
   it("refreshes the page only when asked to", () => {
