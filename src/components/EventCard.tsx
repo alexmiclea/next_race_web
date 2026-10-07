@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { SportTag } from "@/components/SportTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, type Event } from "@/lib/events";
@@ -7,7 +8,16 @@ import { formatEventDates, parseDate } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
 import { eventSportList, sportClass } from "@/lib/sports";
 
-export async function EventCard({ event }: { event: Event }) {
+export async function EventCard({
+  event,
+  isFavorite,
+  refreshOnFavoriteChange = false,
+}: {
+  event: Event;
+  isFavorite: boolean;
+  /** On the favourites page, un-starring a race removes its card. */
+  refreshOnFavoriteChange?: boolean;
+}) {
   const t = await getTranslations("Event");
   const format = await getFormatter();
   const start = parseDate(event.start_date);
@@ -18,10 +28,10 @@ export async function EventCard({ event }: { event: Event }) {
   const colour = sportClass(sports[0]?.slug ?? "");
 
   return (
-    <li className={colour}>
+    <li className={`relative ${colour}`}>
       <Link
         href={eventPath(event)}
-        className="flex gap-4 rounded-xl border border-border bg-background p-4 transition hover:border-sport hover:shadow-sm"
+        className="flex gap-4 rounded-xl border border-border bg-background p-4 pr-14 transition hover:border-sport hover:shadow-sm"
       >
         {/* Calendar-style date block; the full date is in the <time> below for screen readers. */}
         <div
@@ -62,6 +72,14 @@ export async function EventCard({ event }: { event: Event }) {
           )}
         </div>
       </Link>
+      {/* Outside the link: a button inside a link is invalid and confuses screen readers. */}
+      <FavoriteButton
+        eventId={event.id}
+        eventName={event.name}
+        initial={isFavorite}
+        refreshOnChange={refreshOnFavoriteChange}
+        className="absolute right-2 top-2"
+      />
     </li>
   );
 }

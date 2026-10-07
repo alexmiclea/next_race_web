@@ -7,7 +7,37 @@
     "races": "Concursuri",
     "map": "Hartă",
     "about": "Despre",
-    "home": "Next Race — pagina principală"
+    "home": "Next Race — pagina principală",
+    "favorites": "Concursurile mele favorite"
+  },
+  "Favorites": {
+    "title": "Favorite",
+    "tagline": "Concursurile pe care le-ai salvat cu steluța.",
+    "empty": "Încă nu ai salvat niciun concurs. Apasă pe steluța de lângă un concurs ca să-l găsești aici.",
+    "browse": "Vezi concursurile",
+    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont. Concursurile care au trecut dispar automat din listă.",
+    "add": "Adaugă {name} la favorite",
+    "remove": "Scoate {name} de la favorite"
+  },
+  "CookieNotice": {
+    "label": "Despre cookie-uri",
+    "text": "Folosim doar cookie-uri funcționale, pentru tema aleasă și concursurile favorite. Nu folosim cookie-uri de urmărire sau reclame.",
+    "more": "Detalii",
+    "ok": "Am înțeles"
+  },
+  "Cookies": {
+    "title": "Cookie-uri",
+    "intro": "Next Race folosește doar câteva cookie-uri funcționale, care țin minte alegerile tale pe acest dispozitiv. Nu au nevoie de cont și nu sunt trimise nimănui altcuiva.",
+    "listTitle": "Ce cookie-uri folosim",
+    "theme": "Tema aleasă (luminoasă, întunecată sau ca pe dispozitiv). Se păstrează un an.",
+    "favorites": "Concursurile salvate cu steluța. Se păstrează un an.",
+    "notice": "Ține minte că ai văzut acest anunț despre cookie-uri. Se păstrează un an.",
+    "noTrackingTitle": "Fără urmărire",
+    "noTracking": "Nu folosim cookie-uri de analiză, de publicitate sau de urmărire și nu creăm profiluri ale vizitatorilor.",
+    "thirdPartyTitle": "Servicii externe",
+    "thirdParty": "Harta afișează imagini de la OpenStreetMap, care primesc adresa IP a dispozitivului tău, ca orice site care încarcă imagini. Butonul „Buy me a coffee” este un simplu link: pagina Buy Me a Coffee se încarcă doar dacă îl apeși.",
+    "deleteTitle": "Cum le ștergi",
+    "delete": "Poți șterge oricând cookie-urile din setările browserului. Vei pierde tema aleasă și lista de favorite de pe acest dispozitiv."
   },
   "Theme": {
     "label": "Temă: {theme}",
@@ -17,7 +47,8 @@
   },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
-    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului."
+    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
+    "cookies": "Cookie-uri"
   },
   "Filters": {
     "title": "Filtrează",

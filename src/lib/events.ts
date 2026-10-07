@@ -77,6 +77,22 @@ export async function getUpcomingEvents(filters: Filters): Promise<Event[]> {
   return data.map(sortRaces);
 }
 
+/** Upcoming approved events with the given ids (e.g. favourites), soonest first. */
+export async function getUpcomingEventsByIds(ids: string[]): Promise<Event[]> {
+  if (ids.length === 0) return [];
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("events")
+    .select(EVENT_FIELDS)
+    .in("id", ids)
+    .gte("end_date", today())
+    .order("start_date")
+    .order("name")
+    .returns<Event[]>();
+  if (error) throw new Error(`Loading events failed: ${error.message}`);
+  return data.map(sortRaces);
+}
+
 /**
  * One approved event by its slug (or, for old links, its id), or null if it doesn't
  * exist or isn't public.

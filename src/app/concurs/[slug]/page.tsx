@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { SportTag } from "@/components/SportTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
+import { getFavoriteIds } from "@/lib/favorites-server";
 import { formatEventDates } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
 import { eventSportList, sportClass } from "@/lib/sports";
@@ -34,6 +36,7 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
   const races = event.races.filter((race) => race.label !== "?");
   const sports = eventSportList(event.races);
   const primaryUrl = event.registration_url ?? event.website_url;
+  const isFavorite = (await getFavoriteIds()).includes(event.id);
   const row = "grid gap-1 border-t border-border py-4 sm:grid-cols-[10rem_1fr]";
   const label = "text-sm font-semibold text-muted";
 
@@ -50,7 +53,10 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
           ))}
           {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
         </p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
+        <div className="mt-1 flex items-start justify-between gap-2">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
+          <FavoriteButton eventId={event.id} eventName={event.name} initial={isFavorite} />
+        </div>
       </header>
 
       {event.description && (

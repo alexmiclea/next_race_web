@@ -3,8 +3,10 @@ import { Geist } from "next/font/google";
 import { cookies } from "next/headers";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { CookieNotice } from "@/components/CookieNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
+import { COOKIE_NOTICE_COOKIE, cookieNoticeSeen } from "@/lib/cookie-notice";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
 
@@ -21,7 +23,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const locale = await getLocale();
-  const theme = parseTheme((await cookies()).get(THEME_COOKIE)?.value);
+  const cookieStore = await cookies();
+  const theme = parseTheme(cookieStore.get(THEME_COOKIE)?.value);
+  const showCookieNotice = !cookieNoticeSeen(cookieStore.get(COOKIE_NOTICE_COOKIE)?.value);
   return (
     <html
       lang={locale}
@@ -34,6 +38,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
           <SiteHeader theme={theme} />
           {children}
           <SiteFooter />
+          {showCookieNotice && <CookieNotice />}
         </NextIntlClientProvider>
       </body>
     </html>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { DonateLink } from "@/components/DonateLink";
 
@@ -11,6 +12,11 @@ export async function SiteFooter() {
             <strong className="text-foreground">Next Race</strong> — {t("tagline")}
           </p>
           <p>{t("draft")}</p>
+          <p>
+            <Link href="/cookies" className="underline hover:text-foreground">
+              {t("cookies")}
+            </Link>
+          </p>
         </div>
         <DonateLink />
       </div>
