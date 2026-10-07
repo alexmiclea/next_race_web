@@ -28,7 +28,7 @@ export type Event = {
   website_url: string | null;
   registration_url: string | null;
   source_url: string | null;
-  /** Short fact-only summary written by AI from the organizer's page (scraper: npm run describe). */
+  /** Short fact-only summary written by Claude from the organizer's page (see CLAUDE.md, "Writing race descriptions"). */
   description: string | null;
   description_source_url: string | null;
   counties: { name: string } | null;

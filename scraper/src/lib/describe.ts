@@ -1,7 +1,4 @@
-import Anthropic from '@anthropic-ai/sdk';
-import { zodOutputFormat } from '@anthropic-ai/sdk/helpers/zod';
 import * as cheerio from 'cheerio';
-import { z } from 'zod';
 
 /** Enough for a race website's main page; longer pages are cut (and reported). */
 export const MAX_PAGE_CHARS = 40_000;
@@ -59,56 +56,72 @@ export function descriptionProblems(description: string, evidence: string[], pag
   return problems;
 }
 
-const DescriptionSchema = z.object({
-  /** Null when the page doesn't contain enough facts about this race. */
-  description: z.string().nullable(),
+/** Pages with less visible text than this are probably built with JavaScript. */
+export const MIN_PAGE_CHARS = 200;
+
+/** Why an organizer page can't be used for a description, or null if it can. */
+export function skipReason(url: string, page?: { text: string }): string | null {
+  // Facebook pages need a login to read, so there is nothing to describe from.
+  if (/(^|\.)(facebook|fb)\.com$/i.test(new URL(url).hostname)) return 'Facebook page';
+  if (page && page.text.length < MIN_PAGE_CHARS) {
+    return 'page has almost no text (probably built with JavaScript)';
+  }
+  return null;
+}
+
+/** One race waiting for a description, as written to todo.json by describe:prepare. */
+export type TodoItem = {
+  id: string;
+  name: string;
+  city: string | null;
+  distances: string[];
+  url: string;
+  /** File in the pages/ folder holding the page text. */
+  pageFile: string;
+  truncated: boolean;
+};
+
+/** A description written in a Claude Code session, as read from drafts.json. */
+export type Draft = {
+  id: string;
+  /** Null when the page doesn't hold enough facts about the race. */
+  description: string | null;
   /** Short verbatim quotes from the page, one or more per fact used. */
-  evidence: z.array(z.string()),
-  /** Why the description is null, or anything the reviewer should know. */
-  note: z.string(),
-});
+  evidence: string[];
+  note?: string;
+};
 
-export type DescriptionResult = z.infer<typeof DescriptionSchema>;
+/**
+ * Reads drafts.json, checking its shape so a typo is reported instead of saving
+ * something half-filled. Throws with every problem found.
+ */
+export function parseDrafts(json: string): Draft[] {
+  let data: unknown;
+  try {
+    data = JSON.parse(json);
+  } catch (error) {
+    throw new Error(`drafts.json is not valid JSON: ${(error as Error).message}`);
+  }
+  if (!Array.isArray(data)) throw new Error('drafts.json must be a list of drafts');
 
-const SYSTEM_PROMPT = `You write short factual descriptions of endurance races (running, cycling, swimming, triathlon) for a Romanian race calendar website.
-
-You receive the visible text of the organizer's web page. Write 2-3 sentences in Romanian describing the race using ONLY facts stated explicitly in that text: for example the type of course (road, trail, mountain), the landscape or places the route passes through, where it starts, elevation gain, what makes it distinctive, or who organizes it.
-
-Strict rules:
-- Use only information written in the page text. Do not add anything from general knowledge, do not infer, do not guess, and do not embellish. If a fact is not on the page, leave it out.
-- Do not mention dates, years, prices, fees, registration deadlines or prize money: they change between editions and the website shows dates separately.
-- Do not list the distances; the website already shows them.
-- Write in your own words in plain, neutral Romanian. Do not copy sentences from the page, and avoid marketing superlatives.
-- For every fact you use, include in "evidence" a short quote (a few words up to one sentence) copied exactly, character for character, from the page text that supports it. These quotes are checked automatically against the page.
-- If the page is about a different event, is mostly unrelated content (cookie notices, a login page, a generic organizer homepage), or does not contain at least two concrete facts about this race, set "description" to null, leave "evidence" empty, and explain why in "note".`;
-
-/** Asks Claude for a fact-only description of one race, based on its web page text. */
-export async function describeRace(
-  client: Anthropic,
-  race: { name: string; city: string | null; distances: string[] },
-  page: string,
-): Promise<DescriptionResult | null> {
-  const response = await client.messages.parse({
-    model: 'claude-opus-5-5',
-    max_tokens: 16000,
-    output_config: { effort: 'medium', format: zodOutputFormat(DescriptionSchema) },
-    system: SYSTEM_PROMPT,
-    messages: [
-      {
-        role: 'user',
-        content: [
-          `Race name: ${race.name}`,
-          `Place (from our calendar): ${race.city ?? 'unknown'}`,
-          `Distances (from our calendar): ${race.distances.join(', ') || 'unknown'}`,
-          '',
-          '<page_text>',
-          page,
-          '</page_text>',
-        ].join('\n'),
-      },
-    ],
+  const problems: string[] = [];
+  const drafts = data.flatMap((item: unknown, index): Draft[] => {
+    const at = `draft ${index + 1}`;
+    if (typeof item !== 'object' || item === null) {
+      problems.push(`${at}: not an object`);
+      return [];
+    }
+    const { id, description, evidence, note } = item as Record<string, unknown>;
+    if (typeof id !== 'string' || id === '') problems.push(`${at}: missing "id"`);
+    if (description !== null && typeof description !== 'string') {
+      problems.push(`${at}: "description" must be text or null`);
+    }
+    if (!Array.isArray(evidence) || !evidence.every((quote) => typeof quote === 'string')) {
+      problems.push(`${at}: "evidence" must be a list of quotes`);
+    }
+    if (note !== undefined && typeof note !== 'string') problems.push(`${at}: "note" must be text`);
+    return [{ id, description, evidence, note } as Draft];
   });
-  // A declined request has no usable output; the race simply gets no description.
-  if (response.stop_reason === 'refusal') return null;
-  return response.parsed_output;
+  if (problems.length > 0) throw new Error(`drafts.json has problems:\n${problems.join('\n')}`);
+  return drafts;
 }

@@ -2,10 +2,13 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   descriptionProblems,
+  MIN_PAGE_CHARS,
   MAX_PAGE_CHARS,
   missingEvidence,
   normalizeForMatch,
   pageText,
+  parseDrafts,
+  skipReason,
 } from '../src/lib/describe.ts';
 
 describe('pageText', () => {
@@ -83,5 +86,63 @@ describe('descriptionProblems', () => {
 
   it('rejects descriptions that are too short', () => {
     assert.match(descriptionProblems('Cursă la Sibiu.', ['Sibiu'], page).join(), /too short/);
+  });
+});
+
+describe('skipReason', () => {
+  it('skips Facebook pages, which need a login', () => {
+    assert.equal(skipReason('https://www.facebook.com/events/123'), 'Facebook page');
+    assert.equal(skipReason('https://m.facebook.com/FagetWinterRace'), 'Facebook page');
+    assert.equal(skipReason('https://fb.com/x'), 'Facebook page');
+  });
+
+  it('does not mistake other sites with "facebook" in the address for Facebook', () => {
+    assert.equal(skipReason('https://alergaras.ro/facebook-gallery'), null);
+  });
+
+  it('skips pages with almost no text', () => {
+    assert.match(skipReason('https://alergaras.ro/', { text: 'Loading…' })!, /almost no text/);
+  });
+
+  it('accepts a normal organizer page', () => {
+    assert.equal(skipReason('https://alergaras.ro/', { text: 'a'.repeat(MIN_PAGE_CHARS) }), null);
+  });
+});
+
+describe('parseDrafts', () => {
+  it('reads descriptions and "not enough facts" entries', () => {
+    const drafts = parseDrafts(
+      JSON.stringify([
+        { id: 'a', description: 'Cursă montană.', evidence: ['creasta'] },
+        { id: 'b', description: null, evidence: [], note: 'pagina e despre alt eveniment' },
+      ]),
+    );
+    assert.equal(drafts.length, 2);
+    assert.equal(drafts[1].description, null);
+    assert.equal(drafts[1].note, 'pagina e despre alt eveniment');
+  });
+
+  it('reports invalid JSON clearly', () => {
+    assert.throws(() => parseDrafts('[{"id": "a",}]'), /not valid JSON/);
+  });
+
+  it('requires a list', () => {
+    assert.throws(() => parseDrafts('{"id": "a"}'), /must be a list/);
+  });
+
+  it('lists every problem at once, with the draft number', () => {
+    assert.throws(
+      () =>
+        parseDrafts(
+          JSON.stringify([
+            { description: 'x', evidence: [] },
+            { id: 'b', description: 5, evidence: 'creasta' },
+          ]),
+        ),
+      (error: Error) =>
+        /draft 1: missing "id"/.test(error.message) &&
+        /draft 2: "description" must be text or null/.test(error.message) &&
+        /draft 2: "evidence" must be a list of quotes/.test(error.message),
+    );
   });
 });

@@ -44,7 +44,9 @@ Record decisions here so they aren't re-discussed in later sessions.
 - Race data sourcing (business plan: become the platform organizers submit to; until then, fill the database by scraping):
   - Scraped races and, later, organizer submissions go into one review queue (`pending` / `approved` / `rejected`). Only approved races are public. The owner manually reviews every entry.
   - Scrape facts only (name, date, location, distances, registration link). Don't copy descriptions or photos verbatim. Respect `robots.txt` and terms of use. Prefer organizers' own sites over other race-listing sites (EU database right; future competitors).
-  - Descriptions: never copied. `npm run describe` has Claude (claude-opus-5-5) write 2-3 Romanian sentences using only facts stated on the organizer's page - no inference, no dates/prices/distances. Each fact must come with verbatim evidence quotes; code rejects the description if any quote isn't on the page, or if it mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages are skipped (login wall).
+  - Descriptions: never copied. Claude writes them in a Claude Code session (see **Writing race descriptions** below) using only facts stated on the organizer's page; code rejects any description whose evidence quotes aren't on the page, or that mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages are skipped (login wall).
+
+- No paid services beyond the owner's Claude subscription. In particular, never call the Anthropic API (it is billed separately): any AI work happens inside a Claude Code session, with scripts only preparing input and checking/saving output. Flag any cost before building something that would incur it.
   - Always store and show the source URL for each race.
   - Detect duplicates (similar name + same date + city) across sources and runs; update or flag instead of creating duplicates.
   - The scraper runs on a schedule via GitHub Actions (not Vercel Cron), one source at a time.
@@ -93,8 +95,21 @@ Scraper (`scraper/`, standalone Node ≥ 23.6 package, TypeScript run directly b
 - `npm install` — install dependencies
 - `npm run scrape` — scrape all sources into `scraper/output/<hostname>.json` and `.csv` (git-ignored), and into Supabase as `pending` events when `scraper/.env` has `SUPABASE_URL` and `SUPABASE_SECRET_KEY` (see `scraper/.env.example`). Re-runs refresh events that are still pending; approved/rejected events are never changed.
 - `npm run geocode` — fill in map coordinates (OpenStreetMap Nominatim, max 1 request/second) for events with a city but no coordinates; also runs automatically after `npm run scrape`
-- `npm run describe` — write fact-only AI descriptions for races without one (`-- --force` rewrites all); needs `ANTHROPIC_API_KEY` in `scraper/.env`; costs a few cents per race
+- `npm run describe:prepare` — download organizer pages for races without a description into `scraper/output/descriptions/` (`-- --force`: all races)
+- `npm run describe:apply` — check the drafts in `scraper/output/descriptions/drafts.json` against those pages and save the ones that pass
 - `npm test` — parser tests
 - `npm run typecheck` — TypeScript check
 
 To add a website, add an entry to `scraper/src/sources.ts`; add a parser only if its layout is new. Review happens in the Supabase table editor: set `events.status` to `approved` or `rejected`; parser warnings are in `review_note`. Events whose distances weren't found get one race labelled `?`.
+
+### Writing race descriptions
+
+When asked to write descriptions: run `npm run describe:prepare`, read `scraper/output/descriptions/todo.json` and each page in `pages/`, write `drafts.json`, then run `npm run describe:apply` and fix or drop anything it rejects.
+
+`drafts.json` is a list of `{ "id", "description", "evidence": [...], "note" }`, one per race in `todo.json`. Rules for each description:
+
+- 2-3 sentences in plain, neutral Romanian, in your own words — never copy sentences from the page, no marketing superlatives.
+- Only facts written on the page: type of course (road, trail, mountain), landscape or places on the route, start location, elevation gain, what makes it distinctive, organizer. Nothing from general knowledge, no inference, no guessing.
+- No dates, years, prices, fees, deadlines or prize money (they change between editions), and don't list distances (the site shows them).
+- `evidence`: for every fact, a short quote (a few words to one sentence) copied exactly from the page text.
+- If the page is about another event, is mostly unrelated (cookie notice, login, generic homepage), or has fewer than two concrete facts about the race: `"description": null`, empty `evidence`, and the reason in `note`.

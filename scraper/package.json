@@ -9,15 +9,14 @@
   "scripts": {
     "scrape": "node --env-file-if-exists=.env src/run.ts",
     "geocode": "node --env-file=.env src/geocode.ts",
-    "describe": "node --env-file=.env src/describe.ts",
     "test": "node --test test/*.test.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "describe:prepare": "node --env-file=.env src/describe-prepare.ts",
+    "describe:apply": "node --env-file=.env src/describe-apply.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.131.0",
     "@supabase/supabase-js": "^2.117.2",
-    "cheerio": "^1.0.0",
-    "zod": "^4.6.5"
+    "cheerio": "^1.0.0"
   },
   "devDependencies": {
     "@types/node": "^24.0.0",
