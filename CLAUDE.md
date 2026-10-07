@@ -45,12 +45,12 @@ Record decisions here so they aren't re-discussed in later sessions.
   - Scraped races and, later, organizer submissions go into one review queue (`pending` / `approved` / `rejected`). Only approved races are public. The owner manually reviews every entry.
   - Scrape facts only (name, date, location, distances, registration link). Don't copy descriptions or photos verbatim. Respect `robots.txt` and terms of use. Prefer organizers' own sites over other race-listing sites (EU database right; future competitors).
   - Descriptions: never copied. Claude writes them in a Claude Code session (see **Writing race descriptions** below) using only facts stated on the organizer's page; code rejects any description whose evidence quotes aren't on the page, or that mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages are skipped (login wall).
-
-- No paid services beyond the owner's Claude subscription. In particular, never call the Anthropic API (it is billed separately): any AI work happens inside a Claude Code session, with scripts only preparing input and checking/saving output. Flag any cost before building something that would incur it.
   - Always store and show the source URL for each race.
   - Detect duplicates (similar name + same date + city) across sources and runs; update or flag instead of creating duplicates.
   - The scraper runs on a schedule via GitHub Actions (not Vercel Cron), one source at a time.
   - Build order: listing + filters with hand-entered seed data → review queue + admin screen → scraper → organizer accounts and submissions.
+
+- No paid services beyond the owner's Claude subscription. In particular, never call the Anthropic API (it is billed separately): any AI work happens inside a Claude Code session, with scripts only preparing input and checking/saving output. Flag any cost before building something that would incur it.
 
 - No mobile app for now. The website must be fully responsive (mobile-first) instead.
 - Supabase project: `ckzhgqaalsgwiomlbbdf` (EU). Env vars in `.env.local` (see `.env.example`). The secret key is server-only and must never be committed or pasted into chat.
