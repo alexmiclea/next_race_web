@@ -12,13 +12,13 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: 70 running races scraped and approved. Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), custom domain.
+Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: ~40 approved upcoming events — mostly running (scraped), plus a few cycling, swimming and triathlon events added by hand (`source = 'manual'`). Each sport has its own colour (running orange, swimming light blue, cycling green, triathlon purple; tokens in `globals.css`, logic in `src/lib/sports.ts`). Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), custom domain.
 
 ### Layout
 
 - `src/app/` — Next.js 16 App Router pages (`params` / `searchParams` / `cookies()` are async)
 - `src/lib/events.ts` — all event queries; `src/lib/filters.ts` — filters parsed from the URL (sport, county, distance bucket, from/to)
-- `src/components/` — `FilterForm` (plain GET form, works without JS), `EventCard`, `RaceMap` (client-only Leaflet), header/footer
+- `src/components/` — `FilterForm` (GET form that applies itself via `AutoApplyForm`; works without JS), filter dropdowns all built on `Dropdown` (`SelectDropdown` single choice, `CountySelect` multi-select — no native `<select>`), `EventCard`, `SportTag`/`SportIcon`, `RaceMap` (client-only Leaflet), header/footer
 - `src/lib/supabase/server.ts` — Supabase client for server code (publishable key; RLS controls access)
 - `src/i18n/request.ts` + `messages/ro.json` — next-intl, Romanian only, no locale prefix in URLs yet
 - `supabase/migrations/` — SQL migrations, applied in order (for now: pasted into the Supabase SQL editor)
