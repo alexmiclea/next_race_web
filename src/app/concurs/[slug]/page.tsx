@@ -2,11 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { AdminEventBar } from "@/components/AdminEventBar";
 import { FavoriteButton } from "@/components/FavoriteButton";
 import { PastTag } from "@/components/PastTag";
 import { SportTag } from "@/components/SportTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
+import { getAdminIfSignedIn } from "@/lib/admin/session";
 import { getFavoriteIds } from "@/lib/favorites-server";
 import { isPast, today } from "@/lib/filters";
 import { formatEventDates } from "@/lib/format";
@@ -41,12 +43,14 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
   // Registration is closed for a past race; the organizer's site may have results.
   const registrationUrl = past ? null : event.registration_url;
   const primaryUrl = registrationUrl ?? event.website_url;
-  const isFavorite = (await getFavoriteIds()).includes(event.id);
+  const [favoriteIds, admin] = await Promise.all([getFavoriteIds(), getAdminIfSignedIn()]);
+  const isFavorite = favoriteIds.includes(event.id);
   const row = "grid gap-1 border-t border-border py-4 sm:grid-cols-[10rem_1fr]";
   const label = "text-sm font-semibold text-muted";
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
+      {admin && <AdminEventBar eventId={event.id} />}
       <Link href="/" className="text-sm font-medium text-muted hover:text-foreground">
         ← {t("back")}
       </Link>

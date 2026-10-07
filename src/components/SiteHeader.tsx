@@ -12,16 +12,22 @@ import type { Theme } from "@/lib/theme";
 export async function SiteHeader({
   theme,
   favoriteCount,
+  isAdmin = false,
 }: {
   theme: Theme;
   favoriteCount: number;
+  /** Adds an "Admin" link for the signed-in admin. */
+  isAdmin?: boolean;
 }) {
   const t = await getTranslations("Nav");
   const before = [
     { href: "/", label: t("races") },
     { href: "/harta", label: t("map") },
   ];
-  const after = [{ href: "/despre", label: t("about") }];
+  const after = [
+    { href: "/despre", label: t("about") },
+    ...(isAdmin ? [{ href: "/admin", label: t("admin") }] : []),
+  ];
 
   const inline = "rounded-md px-3 py-2 hover:bg-surface";
   const stacked = "block w-full rounded-md px-3 py-3 text-base hover:bg-surface";

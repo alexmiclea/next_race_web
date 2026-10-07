@@ -19,6 +19,14 @@ export default async function AdminQueuePage({ searchParams }: PageProps<"/admin
 
   return (
     <main>
+      <div className="mb-4 flex justify-end">
+        <Link
+          href="/admin/concurs/nou"
+          className="inline-flex h-10 items-center rounded-lg bg-accent px-4 font-semibold text-on-accent hover:opacity-90"
+        >
+          + {t("addEvent")}
+        </Link>
+      </div>
       <nav aria-label={t("tabs")} className="mb-4 flex flex-wrap gap-2">
         {TABS.map((tab) => (
           <Link

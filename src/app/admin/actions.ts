@@ -1,10 +1,12 @@
 "use server";
 
+import { randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { looksLikeEmail } from "@/lib/admin/auth-helpers";
 import { parseEventForm } from "@/lib/admin/form";
+import { locatePlace } from "@/lib/admin/geocode";
 import { requireAdmin } from "@/lib/admin/session";
 import type { ReviewStatus } from "@/lib/admin/events";
 import { createClient } from "@/lib/supabase/server";
@@ -53,6 +55,53 @@ export async function setEventStatus(id: string, status: ReviewStatus) {
 
 export type SaveState = { errors: string[] };
 
+/** County name for a code (the map lookup works better with it). */
+async function countyName(
+  supabase: Awaited<ReturnType<typeof requireAdmin>>["supabase"],
+  code: string | null,
+): Promise<string | null> {
+  if (!code) return null;
+  const { data } = await supabase.from("counties").select("name").eq("code", code).maybeSingle();
+  return data?.name ?? null;
+}
+
+/** Adds a race by hand. It gets its map pin straight away when the place can be found. */
+export async function createEvent(
+  sportSlugs: string[],
+  _previous: SaveState,
+  data: FormData,
+): Promise<SaveState> {
+  const { supabase } = await requireAdmin();
+  const parsed = parseEventForm(data, sportSlugs);
+  if (!parsed.ok) return { errors: parsed.errors };
+
+  const point = parsed.event.is_virtual
+    ? null
+    : await locatePlace(parsed.event.city, await countyName(supabase, parsed.event.county_code));
+  const { data: created, error } = await supabase
+    .from("events")
+    .insert({
+      ...parsed.event,
+      ...point,
+      source: "manual",
+      // Unique within the "manual" source; the readable slug is set by the database.
+      external_key: `manual-${randomUUID()}`,
+    })
+    .select("id")
+    .single();
+  if (error || !created) return { errors: ["saveFailed"] };
+
+  // A new form has no existing rows, so everything is in "add".
+  const races = parsed.races.add.map((race) => ({ ...race, event_id: created.id }));
+  if (races.length > 0) {
+    const { error: racesError } = await supabase.from("races").insert(races);
+    if (racesError) return { errors: ["saveFailed"] };
+  }
+
+  refreshPages();
+  redirect(`/admin?status=${parsed.event.status}&saved=${created.id}`);
+}
+
 export async function saveEvent(
   id: string,
   sportSlugs: string[],
@@ -63,7 +112,27 @@ export async function saveEvent(
   const parsed = parseEventForm(data, sportSlugs);
   if (!parsed.ok) return { errors: parsed.errors };
 
-  const { error } = await supabase.from("events").update(parsed.event).eq("id", id);
+  // Look the place up again only when it changed (or was never found).
+  const { data: before } = await supabase
+    .from("events")
+    .select("city, county_code, latitude")
+    .eq("id", id)
+    .single();
+  const placeChanged =
+    !before ||
+    before.latitude === null ||
+    before.city !== parsed.event.city ||
+    before.county_code !== parsed.event.county_code;
+  const point =
+    placeChanged && !parsed.event.is_virtual
+      ? await locatePlace(parsed.event.city, await countyName(supabase, parsed.event.county_code))
+      : null;
+  const coordinates = point ?? (placeChanged ? { latitude: null, longitude: null } : {});
+
+  const { error } = await supabase
+    .from("events")
+    .update({ ...parsed.event, ...coordinates })
+    .eq("id", id);
   if (error) return { errors: ["saveFailed"] };
 
   const { keep, add, remove } = parsed.races;

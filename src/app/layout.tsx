@@ -7,6 +7,7 @@ import { CookieNotice } from "@/components/CookieNotice";
 import { SiteFooter } from "@/components/SiteFooter";
 import { SiteHeader } from "@/components/SiteHeader";
 import { COOKIE_NOTICE_COOKIE, cookieNoticeSeen } from "@/lib/cookie-notice";
+import { getAdminIfSignedIn } from "@/lib/admin/session";
 import { countUpcoming } from "@/lib/events";
 import { FAVORITES_COOKIE, parseFavorites } from "@/lib/favorites";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
@@ -32,6 +33,8 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
   const favoriteCount = await countUpcoming(
     parseFavorites(cookieStore.get(FAVORITES_COOKIE)?.value),
   ).catch(() => 0);
+  // Only the admin carries a login cookie; for everyone else this is a no-op.
+  const isAdmin = Boolean(await getAdminIfSignedIn().catch(() => null));
   const showCookieNotice = !cookieNoticeSeen(cookieStore.get(COOKIE_NOTICE_COOKIE)?.value);
   return (
     <html
@@ -42,7 +45,7 @@ export default async function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="flex min-h-full flex-col">
         <NextIntlClientProvider>
-          <SiteHeader theme={theme} favoriteCount={favoriteCount} />
+          <SiteHeader theme={theme} favoriteCount={favoriteCount} isAdmin={isAdmin} />
           {children}
           <SiteFooter />
           {showCookieNotice && <CookieNotice />}

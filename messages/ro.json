@@ -11,6 +11,7 @@
     "favorites": "Favorite",
     "favoritesCount": "{count, plural, one {# concurs salvat} few {# concursuri salvate} other {# de concursuri salvate}}",
     "menu": "Meniu",
+    "admin": "Admin",
     "main": "Navigare principală"
   },
   "Favorites": {
@@ -155,6 +156,9 @@
     "noPlace": "fără locație",
     "noDistances": "fără distanțe",
     "backToList": "Înapoi la listă",
+    "addEvent": "Adaugă concurs",
+    "hideConfirm": "Ascunzi acest concurs? Nu va mai apărea pe site; îl poți publica din nou din Administrare.",
+    "adminLink": "Admin",
     "login": {
       "title": "Autentificare administrator",
       "intro": "Introdu adresa de email. Dacă are acces, vei primi un link de autentificare.",

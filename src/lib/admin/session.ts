@@ -1,5 +1,7 @@
 import "server-only";
 import type { User } from "@supabase/supabase-js";
+import { cookies } from "next/headers";
+import { hasAuthCookie } from "@/lib/admin/auth-helpers";
 import { createClient } from "@/lib/supabase/server";
 
 /**
@@ -18,6 +20,15 @@ export async function getAdmin(): Promise<{
   if (!user) return null;
   const { data: isAdmin, error } = await supabase.rpc("is_admin");
   return !error && isAdmin === true ? { user, supabase } : null;
+}
+
+/**
+ * For public pages: the admin, or null. Visitors without a login cookie (everyone but
+ * the admin) skip the check, so it adds nothing to their page loads.
+ */
+export async function getAdminIfSignedIn() {
+  const names = (await cookies()).getAll().map((cookie) => cookie.name);
+  return hasAuthCookie(names) ? getAdmin() : null;
 }
 
 /** For server actions: the admin, or an error that stops the action. */
