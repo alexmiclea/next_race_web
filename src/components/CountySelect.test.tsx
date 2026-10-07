@@ -17,7 +17,7 @@ function renderSelect(defaultSelected: string[] = []) {
   const { container } = render(
     <NextIntlClientProvider locale="ro" messages={messages}>
       <form>
-        <CountySelect counties={COUNTIES} defaultSelected={defaultSelected} className="" />
+        <CountySelect counties={COUNTIES} defaultSelected={defaultSelected} />
       </form>
     </NextIntlClientProvider>,
   );

@@ -3,8 +3,11 @@ import { getTranslations } from "next-intl/server";
 import { AutoApplyForm } from "@/components/AutoApplyForm";
 import { CountySelect } from "@/components/CountySelect";
 import { DateField } from "@/components/DateField";
+import { SelectDropdown } from "@/components/SelectDropdown";
+import { SportIcon } from "@/components/SportTag";
 import type { County, Sport } from "@/lib/events";
 import { DISTANCE_BUCKETS, hasFilters, type Filters } from "@/lib/filters";
+import { sportClass } from "@/lib/sports";
 
 /**
  * Filters live in the URL, so filtered views can be bookmarked or shared. The form
@@ -40,38 +43,39 @@ export async function FilterForm({
       className="rounded-xl border border-border bg-surface p-4"
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        <label className={field}>
-          {t("sport")}
-          <select name="sport" defaultValue={filters.sport ?? ""} className={control}>
-            <option value="">{t("any")}</option>
-            {sports.map((sport) => (
-              <option key={sport.slug} value={sport.slug}>
-                {sport.name_ro}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectDropdown
+          name="sport"
+          label={t("sport")}
+          defaultValue={filters.sport ?? ""}
+          options={[
+            { value: "", label: t("any") },
+            ...sports.map((sport) => ({
+              value: sport.slug,
+              label: sport.name_ro,
+              icon: (
+                <span className={`${sportClass(sport.slug)} text-sport`}>
+                  <SportIcon slug={sport.slug} />
+                </span>
+              ),
+            })),
+          ]}
+        />
 
-        <label className={field}>
-          {t("distance")}
-          <select name="distance" defaultValue={filters.distance ?? ""} className={control}>
-            <option value="">{t("any")}</option>
-            {Object.keys(DISTANCE_BUCKETS).map((bucket) => (
-              <option key={bucket} value={bucket}>
-                {t(`distances.${bucket as keyof typeof DISTANCE_BUCKETS}`)}
-              </option>
-            ))}
-          </select>
-        </label>
+        <SelectDropdown
+          name="distance"
+          label={t("distance")}
+          defaultValue={filters.distance ?? ""}
+          options={[
+            { value: "", label: t("any") },
+            ...Object.keys(DISTANCE_BUCKETS).map((bucket) => ({
+              value: bucket,
+              label: t(`distances.${bucket as keyof typeof DISTANCE_BUCKETS}`),
+            })),
+          ]}
+        />
 
-        {/* Not a <label>: the dropdown holds many inputs. CountySelect labels itself. */}
-        <div className={`${field} col-span-2 sm:col-span-1`}>
-          <span aria-hidden>{t("county")}</span>
-          <CountySelect
-            counties={counties}
-            defaultSelected={filters.counties}
-            className={control}
-          />
+        <div className="col-span-2 sm:col-span-1">
+          <CountySelect counties={counties} defaultSelected={filters.counties} />
         </div>
 
         <label className={field}>

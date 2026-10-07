@@ -83,7 +83,9 @@ export function RaceMap({ events, focusId }: { events: MapEvent[]; focusId?: str
   return (
     <div
       ref={container}
-      className="h-[65vh] min-h-80 w-full overflow-hidden rounded-xl border border-border"
+      // `isolate` keeps Leaflet's high z-index layers inside the map, so the filter
+      // dropdowns open on top of it.
+      className="isolate h-[65vh] min-h-80 w-full overflow-hidden rounded-xl border border-border"
     />
   );
 }
