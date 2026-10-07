@@ -48,8 +48,10 @@ const EVENT_FIELDS = `
 
 /**
  * Approved events matching the filters, in date order. Starts today unless the "De la"
- * filter reaches back into past races (see listStart). Row-level security already
- * hides events that aren't approved.
+ * filter reaches back into past races (see listStart).
+ *
+ * Every public query filters on status = approved itself: row-level security hides other
+ * events from visitors, but shows them to a signed-in admin, and public pages must not.
  */
 export async function getEvents(
   filters: Filters,
@@ -62,6 +64,7 @@ export async function getEvents(
   let query = supabase
     .from("events")
     .select(`${EVENT_FIELDS}, match:races!inner(sport_slug, distance_km)`)
+    .eq("status", "approved")
     .gte("end_date", listStart(filters, today(), { allowPast }))
     .order("start_date")
     .order("name");
@@ -88,6 +91,7 @@ export async function getEventsByIds(ids: string[]): Promise<Event[]> {
   const { data, error } = await supabase
     .from("events")
     .select(EVENT_FIELDS)
+    .eq("status", "approved")
     .in("id", ids)
     .order("start_date")
     .order("name")
@@ -103,6 +107,7 @@ export async function countUpcoming(ids: string[]): Promise<number> {
   const { count, error } = await supabase
     .from("events")
     .select("id", { count: "exact", head: true })
+    .eq("status", "approved")
     .in("id", ids)
     .gte("end_date", today());
   if (error) throw new Error(`Counting events failed: ${error.message}`);
@@ -119,6 +124,7 @@ export async function getEvent(slugOrId: string): Promise<Event | null> {
   const { data, error } = await supabase
     .from("events")
     .select(EVENT_FIELDS)
+    .eq("status", "approved")
     .eq(column, value)
     .maybeSingle()
     .returns<Event | null>();

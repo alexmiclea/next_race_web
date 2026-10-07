@@ -128,6 +128,88 @@
     "contactTitle": "Contact",
     "contact": "Pentru corecturi, sugestii sau parteneriate, scrie-ne la"
   },
+  "Admin": {
+    "title": "Administrare",
+    "logOut": "Ieși din cont",
+    "tabs": "Concursuri după stare",
+    "status": {
+      "pending": "De verificat",
+      "approved": "Publicate",
+      "rejected": "Ascunse"
+    },
+    "empty": {
+      "pending": "Nimic de verificat. Toate concursurile au fost revizuite.",
+      "approved": "Niciun concurs publicat.",
+      "rejected": "Niciun concurs ascuns."
+    },
+    "saved": "Modificările au fost salvate.",
+    "approve": "Publică",
+    "reject": "Respinge",
+    "hide": "Ascunde",
+    "backToQueue": "Înapoi la verificare",
+    "edit": "Editează",
+    "viewOnSite": "Vezi pe site",
+    "organizerSite": "Site-ul organizatorului",
+    "source": "Sursa",
+    "note": "Notă",
+    "noPlace": "fără locație",
+    "noDistances": "fără distanțe",
+    "backToList": "Înapoi la listă",
+    "login": {
+      "title": "Autentificare administrator",
+      "intro": "Introdu adresa de email. Dacă are acces, vei primi un link de autentificare.",
+      "email": "Email",
+      "send": "Trimite linkul",
+      "sending": "Se trimite…",
+      "sent": "Dacă adresa are acces, ți-am trimis un email cu un link de autentificare. Deschide-l în acest browser.",
+      "invalid": "Adresa de email nu pare corectă.",
+      "tooMany": "Prea multe încercări. Așteaptă câteva minute și încearcă din nou.",
+      "badLink": "Linkul a expirat sau a fost deschis în alt browser. Cere unul nou."
+    },
+    "form": {
+      "details": "Detalii",
+      "name": "Nume",
+      "startDate": "Data de început",
+      "endDate": "Data de sfârșit (opțional)",
+      "startTime": "Ora de start (opțional)",
+      "organizer": "Organizator",
+      "city": "Localitate",
+      "county": "Județ",
+      "virtual": "Concurs virtual (oriunde)",
+      "website": "Site-ul concursului",
+      "registration": "Link de înscriere",
+      "races": "Distanțe",
+      "racesHelp": "Câte un rând pentru fiecare distanță sau categorie. Rândurile goale sunt ignorate.",
+      "raceLabel": "Denumire (ex. 21km, Copii)",
+      "raceKm": "Kilometri",
+      "raceSport": "Sport",
+      "remove": "Șterge",
+      "review": "Stare",
+      "status": {
+        "pending": "De verificat",
+        "approved": "Publicat",
+        "rejected": "Ascuns"
+      },
+      "note": "Notă internă (nu apare pe site)",
+      "save": "Salvează",
+      "saving": "Se salvează…"
+    },
+    "errors": {
+      "nameRequired": "Numele este obligatoriu.",
+      "startDate": "Data de început lipsește sau nu e corectă.",
+      "endDate": "Data de sfârșit nu e corectă.",
+      "endBeforeStart": "Data de sfârșit e înaintea celei de început.",
+      "startTime": "Ora de start nu e corectă.",
+      "county": "Județul nu e corect.",
+      "websiteUrl": "Linkul site-ului trebuie să înceapă cu https://.",
+      "registrationUrl": "Linkul de înscriere trebuie să înceapă cu https://.",
+      "status": "Alege o stare.",
+      "raceLabel": "Fiecare distanță are nevoie de o denumire.",
+      "raceKm": "Kilometrii trebuie să fie un număr.",
+      "raceSport": "Alege sportul pentru fiecare distanță.",
+      "saveFailed": "Salvarea nu a reușit. Încearcă din nou."
+    }
+  },
   "NotFound": {
     "title": "Pagina nu există",
     "text": "Concursul sau pagina căutată nu există sau nu mai este disponibilă.",
