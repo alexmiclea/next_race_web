@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { getFormatter, getTranslations } from "next-intl/server";
 import { FilterForm } from "@/components/FilterForm";
 import { RaceMap, type MapEvent } from "@/components/RaceMap";
+import { SportTag } from "@/components/SportTag";
 import { getFilterOptions, getUpcomingEvents } from "@/lib/events";
 import { parseFilters } from "@/lib/filters";
 import { formatEventDates } from "@/lib/format";
+import { eventSportList } from "@/lib/sports";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Map");
@@ -18,20 +20,23 @@ export default async function MapPage({ searchParams }: PageProps<"/harta">) {
   const filters = parseFilters(params);
   const [events, options] = await Promise.all([getUpcomingEvents(filters), getFilterOptions()]);
 
-  const located: MapEvent[] = events.flatMap((event) =>
-    event.latitude !== null && event.longitude !== null
+  const located: MapEvent[] = events.flatMap((event) => {
+    const sports = eventSportList(event.races);
+    return event.latitude !== null && event.longitude !== null
       ? [
           {
             id: event.id,
             slug: event.slug,
             name: event.name,
             dates: formatEventDates(format, event),
+            sport: sports[0]?.slug ?? null,
+            sports: sports.map((sport) => sport.name).join(", "),
             latitude: event.latitude,
             longitude: event.longitude,
           },
         ]
-      : [],
-  );
+      : [];
+  });
   const notShown = events.length - located.length;
   const focusId = typeof params.event === "string" ? params.event : undefined;
 
@@ -46,6 +51,13 @@ export default async function MapPage({ searchParams }: PageProps<"/harta">) {
 
       <div className="mt-6">
         <RaceMap events={located} focusId={focusId} />
+        <ul aria-label={t("legend")} className="mt-3 flex flex-wrap items-center gap-2">
+          {options.sports.map((sport) => (
+            <li key={sport.slug}>
+              <SportTag slug={sport.slug} name={sport.name_ro} />
+            </li>
+          ))}
+        </ul>
         {notShown > 0 && (
           <p className="mt-2 text-sm text-muted">{t("notShown", { count: notShown })}</p>
         )}

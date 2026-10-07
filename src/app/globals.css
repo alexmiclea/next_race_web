@@ -12,6 +12,24 @@
   --accent: #c2410c;
   --accent-soft: #fff1e8;
   --on-accent: #ffffff;
+
+  /* Sport colours: main colour (map pins, icons), soft tint (backgrounds) and ink
+     (text on the tint, readable at WCAG AA). Running shares the brand orange. */
+  --running: #c2410c;
+  --running-soft: #fff1e8;
+  --running-ink: #9a3412;
+  --swimming: #0284c7;
+  --swimming-soft: #e0f2fe;
+  --swimming-ink: #075985;
+  --cycling: #15803d;
+  --cycling-soft: #dcfce7;
+  --cycling-ink: #166534;
+  --triathlon: #7e22ce;
+  --triathlon-soft: #f3e8ff;
+  --triathlon-ink: #6b21a8;
+  --other: #475569;
+  --other-soft: #f1f5f9;
+  --other-ink: #334155;
 }
 
 @theme inline {
@@ -23,6 +41,9 @@
   --color-accent: var(--accent);
   --color-accent-soft: var(--accent-soft);
   --color-on-accent: var(--on-accent);
+  --color-sport: var(--sport);
+  --color-sport-soft: var(--sport-soft);
+  --color-sport-ink: var(--sport-ink);
   --font-sans: var(--font-geist-sans);
 }
 
@@ -38,6 +59,22 @@
   --accent: #fb8a4c;
   --accent-soft: #2a1a10;
   --on-accent: #1a0d05;
+
+  --running: #fb8a4c;
+  --running-soft: #2a1a10;
+  --running-ink: #fdba74;
+  --swimming: #38bdf8;
+  --swimming-soft: #0c2a3d;
+  --swimming-ink: #7dd3fc;
+  --cycling: #4ade80;
+  --cycling-soft: #0f2a1a;
+  --cycling-ink: #86efac;
+  --triathlon: #c084fc;
+  --triathlon-soft: #2a1640;
+  --triathlon-ink: #d8b4fe;
+  --other: #94a3b8;
+  --other-soft: #1e2530;
+  --other-ink: #cbd5e1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -51,8 +88,32 @@
     --accent: #fb8a4c;
     --accent-soft: #2a1a10;
     --on-accent: #1a0d05;
+
+    --running: #fb8a4c;
+    --running-soft: #2a1a10;
+    --running-ink: #fdba74;
+    --swimming: #38bdf8;
+    --swimming-soft: #0c2a3d;
+    --swimming-ink: #7dd3fc;
+    --cycling: #4ade80;
+    --cycling-soft: #0f2a1a;
+    --cycling-ink: #86efac;
+    --triathlon: #c084fc;
+    --triathlon-soft: #2a1640;
+    --triathlon-ink: #d8b4fe;
+    --other: #94a3b8;
+    --other-soft: #1e2530;
+    --other-ink: #cbd5e1;
   }
 }
+
+/* Puts one sport's colours into --sport / --sport-soft / --sport-ink, used through
+   Tailwind as bg-sport-soft, text-sport-ink, border-sport… (see src/lib/sports.ts). */
+.sport-running { --sport: var(--running); --sport-soft: var(--running-soft); --sport-ink: var(--running-ink); }
+.sport-swimming { --sport: var(--swimming); --sport-soft: var(--swimming-soft); --sport-ink: var(--swimming-ink); }
+.sport-cycling { --sport: var(--cycling); --sport-soft: var(--cycling-soft); --sport-ink: var(--cycling-ink); }
+.sport-triathlon { --sport: var(--triathlon); --sport-soft: var(--triathlon-soft); --sport-ink: var(--triathlon-ink); }
+.sport-other { --sport: var(--other); --sport-soft: var(--other-soft); --sport-ink: var(--other-ink); }
 
 body {
   background: var(--background);

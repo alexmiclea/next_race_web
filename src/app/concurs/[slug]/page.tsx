@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { SportTag } from "@/components/SportTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
 import { formatEventDates } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
+import { eventSportList, sportClass } from "@/lib/sports";
 
 export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">): Promise<Metadata> {
   const event = await getEvent((await params).slug);
@@ -30,6 +32,7 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
   const format = await getFormatter();
   const place = event.is_virtual ? t("virtual") : (eventPlace(event) ?? t("unknownPlace"));
   const races = event.races.filter((race) => race.label !== "?");
+  const sports = eventSportList(event.races);
   const primaryUrl = event.registration_url ?? event.website_url;
   const row = "grid gap-1 border-t border-border py-4 sm:grid-cols-[10rem_1fr]";
   const label = "text-sm font-semibold text-muted";
@@ -40,9 +43,11 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
         ← {t("back")}
       </Link>
 
-      <header className="mt-4">
-        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent">
-          {eventSports(event).join(" · ")}
+      <header className={`mt-4 border-l-4 border-sport pl-4 ${sportClass(sports[0]?.slug ?? "")}`}>
+        <p className="flex flex-wrap items-center gap-2">
+          {sports.map((sport) => (
+            <SportTag key={sport.slug} slug={sport.slug} name={sport.name} />
+          ))}
           {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
         </p>
         <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>

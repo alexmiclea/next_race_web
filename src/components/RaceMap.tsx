@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { eventPath } from "@/lib/paths";
+import { markerColorVar } from "@/lib/sports";
 
 export type MapEvent = {
   id: string;
@@ -11,6 +12,10 @@ export type MapEvent = {
   name: string;
   /** Preformatted, e.g. "24 – 25 aprilie 2027". */
   dates: string;
+  /** Main sport slug, for the marker colour (see src/lib/sports.ts). */
+  sport: string | null;
+  /** Sport names, e.g. "Triatlon, Înot", shown in the popup. */
+  sports: string;
   latitude: number;
   longitude: number;
 };
@@ -39,7 +44,7 @@ export function RaceMap({ events, focusId }: { events: MapEvent[]; focusId?: str
         attribution: `<a href="https://www.openstreetmap.org/copyright">${attribution}</a>`,
       }).addTo(map);
 
-      const accent = getComputedStyle(document.documentElement).getPropertyValue("--accent").trim();
+      const rootStyle = getComputedStyle(document.documentElement);
       const markers: L.CircleMarker[] = [];
       let focused: L.CircleMarker | undefined;
 
@@ -50,7 +55,9 @@ export function RaceMap({ events, focusId }: { events: MapEvent[]; focusId?: str
           radius: 7 + Math.min(group.length - 1, 4) * 2,
           color: "#ffffff",
           weight: 2,
-          fillColor: accent,
+          fillColor: rootStyle
+            .getPropertyValue(markerColorVar(group.map((event) => event.sport)))
+            .trim(),
           fillOpacity: 0.9,
         })
           .bindPopup(() => popupContent(group, detailsLabel))
@@ -100,7 +107,7 @@ function popupContent(events: MapEvent[], detailsLabel: string): HTMLElement {
     const name = document.createElement("strong");
     name.textContent = event.name;
     const dates = document.createElement("div");
-    dates.textContent = event.dates;
+    dates.textContent = event.sports ? `${event.dates} · ${event.sports}` : event.dates;
     const link = document.createElement("a");
     link.href = eventPath(event);
     link.textContent = `${detailsLabel} →`;

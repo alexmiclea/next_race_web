@@ -74,7 +74,8 @@
     "title": "Harta concursurilor",
     "tagline": "Concursurile care urmează, pe hartă.",
     "notShown": "{count, plural, one {# concurs nu apare pe hartă} few {# concursuri nu apar pe hartă} other {# de concursuri nu apar pe hartă}} (virtuale sau fără locație).",
-    "attribution": "Hartă © contribuitorii OpenStreetMap"
+    "attribution": "Hartă © contribuitorii OpenStreetMap",
+    "legend": "Legendă: culorile sporturilor"
   },
   "About": {
     "title": "Despre Next Race",
