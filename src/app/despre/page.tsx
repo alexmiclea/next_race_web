@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getTranslations } from "next-intl/server";
+import { DonateLink } from "@/components/DonateLink";
 import { CONTACT_EMAIL } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -19,6 +20,12 @@ export default async function AboutPage() {
 
       <h2 className="mt-8 text-xl font-bold">{t("organizersTitle")}</h2>
       <p className="mt-2 text-muted">{t("organizers")}</p>
+
+      <h2 className="mt-8 text-xl font-bold">{t("supportTitle")}</h2>
+      <p className="mt-2 text-muted">{t("support")}</p>
+      <p className="mt-3">
+        <DonateLink label={t("supportButton")} />
+      </p>
 
       <h2 className="mt-8 text-xl font-bold">{t("contactTitle")}</h2>
       <p className="mt-2 text-muted">

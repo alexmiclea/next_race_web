@@ -39,6 +39,7 @@ Record decisions here so they aren't re-discussed in later sessions.
 - Tech stack: Next.js + Supabase (Postgres database, auth, admin table view). Chosen because the site will need dynamic data beyond a static list. Rich filtering is a key feature.
 - Race data is stored in Supabase.
 - Hosting: Vercel (free Hobby tier to start; it is non-commercial only, so move to Pro or another host if the site starts making money). Keep the app portable so it can move to a self-hosted server later.
+  - Donations are allowed on Hobby (Vercel's fair use guidelines say so explicitly): a "Buy Me a Coffee" link (`DONATE_URL` in `src/lib/site.ts`) in the footer and on `/despre`. Keep it a pure donation — no memberships, shop, perks or featured listings for donors; ads, affiliate links or paid listings would make the site commercial.
 - Language: Romanian at launch, i18n-ready for English later. All UI text goes in translation files — never hard-code user-facing strings in components. Race content (names, descriptions from organizers) stays in its original language.
 
 - Race data sourcing (business plan: become the platform organizers submit to; until then, fill the database by scraping):
