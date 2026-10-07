@@ -17,8 +17,7 @@
   },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
-    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
-    "donate": "Cinstește-ne cu o cafea"
+    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului."
   },
   "Filters": {
     "title": "Filtrează",
@@ -86,8 +85,7 @@
     "organizersTitle": "Ești organizator?",
     "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale. Până atunci, scrie-ne dacă vrei să corectăm sau să adăugăm un eveniment.",
     "supportTitle": "Susține Next Race",
-    "support": "Next Race este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, ne poți cinsti cu o cafea — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
-    "supportButton": "Cinstește-ne cu o cafea",
+    "support": "Next Race este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, poți susține proiectul cu o donație — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
     "contactTitle": "Contact",
     "contact": "Pentru corecturi, sugestii sau parteneriate, scrie-ne la"
   },

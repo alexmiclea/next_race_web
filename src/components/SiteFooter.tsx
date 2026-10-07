@@ -12,7 +12,7 @@ export async function SiteFooter() {
           </p>
           <p>{t("draft")}</p>
         </div>
-        <DonateLink label={t("donate")} />
+        <DonateLink />
       </div>
     </footer>
   );

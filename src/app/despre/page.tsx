@@ -24,7 +24,7 @@ export default async function AboutPage() {
       <h2 className="mt-8 text-xl font-bold">{t("supportTitle")}</h2>
       <p className="mt-2 text-muted">{t("support")}</p>
       <p className="mt-3">
-        <DonateLink label={t("supportButton")} />
+        <DonateLink />
       </p>
 
       <h2 className="mt-8 text-xl font-bold">{t("contactTitle")}</h2>
