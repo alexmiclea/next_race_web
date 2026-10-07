@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { EventCard } from "@/components/EventCard";
+import { FavoritesPrune } from "@/components/FavoritesPrune";
 import { getUpcomingEventsByIds } from "@/lib/events";
 import { getFavoriteIds } from "@/lib/favorites-server";
 
@@ -18,6 +19,7 @@ export default async function FavoritesPage() {
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
+      <FavoritesPrune keep={events.map((event) => event.id)} />
       <header className="mb-6">
         <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
         <p className="mt-2 text-lg text-muted">{t("tagline")}</p>

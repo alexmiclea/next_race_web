@@ -40,3 +40,12 @@ export function readFavoritesFromDocument(): string[] {
     .find((part) => part.startsWith(`${FAVORITES_COOKIE}=`));
   return parseFavorites(entry?.slice(FAVORITES_COOKIE.length + 1));
 }
+
+/** Browser event fired whenever the favourites change; `detail` is the new id list. */
+export const FAVORITES_EVENT = "favorites-change";
+
+/** Saves the favourites in the cookie and tells the rest of the page (e.g. the count). */
+export function saveFavorites(ids: string[]): void {
+  document.cookie = favoritesCookie(ids);
+  window.dispatchEvent(new CustomEvent<string[]>(FAVORITES_EVENT, { detail: ids }));
+}

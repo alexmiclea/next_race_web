@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { favoritesCookie, readFavoritesFromDocument, toggleFavorite } from "@/lib/favorites";
+import { readFavoritesFromDocument, saveFavorites, toggleFavorite } from "@/lib/favorites";
 
 /**
  * Star that saves a race to the visitor's favourites (a cookie, no account).
@@ -29,7 +29,7 @@ export function FavoriteButton({
 
   function toggle() {
     const next = toggleFavorite(readFavoritesFromDocument(), eventId);
-    document.cookie = favoritesCookie(next);
+    saveFavorites(next);
     setSaved(next.includes(eventId.toLowerCase()));
     if (refreshOnChange) router.refresh();
   }

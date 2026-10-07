@@ -8,7 +8,10 @@
     "map": "Hartă",
     "about": "Despre",
     "home": "Next Race — pagina principală",
-    "favorites": "Concursurile mele favorite"
+    "favorites": "Favorite",
+    "favoritesCount": "{count, plural, one {# concurs salvat} few {# concursuri salvate} other {# de concursuri salvate}}",
+    "menu": "Meniu",
+    "main": "Navigare principală"
   },
   "Favorites": {
     "title": "Favorite",
