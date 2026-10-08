@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">)
   if (!event) return {};
   const place = eventPlace(event);
   return {
-    title: `${event.name} — Next Race`,
+    title: event.name,
     description:
       event.description ??
       [event.start_date, place, eventSports(event).join(", ")].filter(Boolean).join(" · "),

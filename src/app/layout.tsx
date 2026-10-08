@@ -10,6 +10,7 @@ import { COOKIE_NOTICE_COOKIE, cookieNoticeSeen } from "@/lib/cookie-notice";
 import { getAdminIfSignedIn } from "@/lib/admin/session";
 import { countUpcoming } from "@/lib/events";
 import { FAVORITES_COOKIE, parseFavorites } from "@/lib/favorites";
+import { SITE_NAME, SLOGAN } from "@/lib/site";
 import { parseTheme, THEME_COOKIE } from "@/lib/theme";
 import "./globals.css";
 
@@ -21,7 +22,11 @@ const geistSans = Geist({
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Metadata");
-  return { title: t("title"), description: t("description") };
+  return {
+    title: { default: `${SITE_NAME} — ${SLOGAN}`, template: `%s — ${SITE_NAME}` },
+    description: t("description"),
+    applicationName: SITE_NAME,
+  };
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {

@@ -3,7 +3,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 // OpenStreetMap Nominatim. Usage policy: max 1 request/second, identify the app, cache results.
 // https://operations.osmfoundation.org/policies/nominatim/
 const NOMINATIM = 'https://nominatim.openstreetmap.org/search';
-const USER_AGENT = 'NextRaceScraper/0.1 (Romanian race calendar)';
+const USER_AGENT = 'BibdayScraper/0.1 (Romanian race calendar)';
 const DELAY_MS = 1100;
 
 type Point = { latitude: number; longitude: number };

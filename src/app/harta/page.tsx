@@ -10,7 +10,7 @@ import { eventSportList } from "@/lib/sports";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Map");
-  return { title: `${t("title")} — Next Race` };
+  return { title: t("title") };
 }
 
 export default async function MapPage({ searchParams }: PageProps<"/harta">) {

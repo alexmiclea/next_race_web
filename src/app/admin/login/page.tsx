@@ -6,7 +6,7 @@ import { LoginForm } from "./LoginForm";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Admin.login");
-  return { title: `${t("title")} — Next Race` };
+  return { title: t("title") };
 }
 
 export default async function LoginPage({ searchParams }: PageProps<"/admin/login">) {

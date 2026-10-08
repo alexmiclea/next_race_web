@@ -6,7 +6,7 @@ import { THEME_COOKIE } from "@/lib/theme";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Cookies");
-  return { title: `${t("title")} — Next Race` };
+  return { title: t("title") };
 }
 
 export default async function CookiesPage() {

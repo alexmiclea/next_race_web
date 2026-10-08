@@ -1,4 +1,4 @@
-const USER_AGENT = 'NextRaceScraper/0.1 (Romanian race calendar; manual review of every entry)';
+const USER_AGENT = 'BibdayScraper/0.1 (Romanian race calendar; manual review of every entry)';
 const DELAY_MS = 1500;
 
 let lastRequestAt = 0;

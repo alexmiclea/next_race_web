@@ -1,13 +1,13 @@
 {
   "Metadata": {
-    "title": "Next Race — concursuri de alergare, ciclism, înot și triatlon în România",
+    "title": "Bibday — concursuri de alergare, ciclism, înot și triatlon în România",
     "description": "Găsește următorul concurs: alergare, ciclism, înot și triatlon în toată România. Dată, locație, distanțe și înscriere."
   },
   "Nav": {
     "races": "Concursuri",
     "map": "Hartă",
     "about": "Despre",
-    "home": "Next Race — pagina principală",
+    "home": "Bibday — pagina principală",
     "favorites": "Favorite",
     "favoritesCount": "{count, plural, one {# concurs salvat} few {# concursuri salvate} other {# de concursuri salvate}}",
     "menu": "Meniu",
@@ -33,7 +33,7 @@
   },
   "Cookies": {
     "title": "Cookie-uri",
-    "intro": "Next Race folosește doar câteva cookie-uri funcționale, care țin minte alegerile tale pe acest dispozitiv. Nu au nevoie de cont și nu sunt trimise nimănui altcuiva.",
+    "intro": "Bibday folosește doar câteva cookie-uri funcționale, care țin minte alegerile tale pe acest dispozitiv. Nu au nevoie de cont și nu sunt trimise nimănui altcuiva.",
     "listTitle": "Ce cookie-uri folosim",
     "theme": "Tema aleasă (luminoasă, întunecată sau ca pe dispozitiv). Se păstrează un an.",
     "favorites": "Concursurile salvate cu steluța. Se păstrează un an.",
@@ -82,7 +82,6 @@
     "includeVirtual": "Include curse virtuale"
   },
   "Home": {
-    "title": "Următorul tău concurs",
     "tagline": "Alergare, ciclism, înot și triatlon — în toată România.",
     "count": "{count, plural, =0 {Niciun concurs} one {# concurs} few {# concursuri} other {# de concursuri}}",
     "empty": "Niciun concurs nu se potrivește filtrelor. Încearcă să le lărgești.",
@@ -118,14 +117,14 @@
     "legend": "Legendă: culorile sporturilor"
   },
   "About": {
-    "title": "Despre Next Race",
-    "intro": "Next Race adună într-un singur loc concursurile de alergare, ciclism, înot și triatlon din România, ca să-ți găsești ușor următoarea cursă.",
+    "title": "Despre Bibday",
+    "intro": "Bibday adună într-un singur loc concursurile de alergare, ciclism, înot și triatlon din România, ca să-ți găsești ușor următoarea cursă.",
     "dataTitle": "De unde vin datele",
     "data": "Concursurile sunt preluate din calendare publice și verificate manual înainte de publicare. Fiecare concurs are un link către sursa informației și către site-ul organizatorului.",
     "organizersTitle": "Ești organizator?",
     "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale. Până atunci, scrie-ne dacă vrei să corectăm sau să adăugăm un eveniment.",
-    "supportTitle": "Susține Next Race",
-    "support": "Next Race este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, poți susține proiectul cu o donație — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
+    "supportTitle": "Susține Bibday",
+    "support": "Bibday este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, poți susține proiectul cu o donație — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
     "contactTitle": "Contact",
     "contact": "Pentru corecturi, sugestii sau parteneriate, scrie-ne la"
   },

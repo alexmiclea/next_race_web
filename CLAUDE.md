@@ -6,7 +6,7 @@ Guidance for Claude when working in this repository. Keep this file short and cu
 
 ## Project
 
-**Next Race** — a website listing local endurance races in Romania: running, swimming, cycling, triathlon, and possibly other sports later.
+**Bibday** (slogan: "Find your next race.") — a website listing local endurance races in Romania: running, swimming, cycling, triathlon, and possibly other sports later.
 
 The goal is to help athletes find upcoming races near them: what, where, when, distance, and how to sign up.
 
@@ -34,6 +34,7 @@ Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `
 
 Record decisions here so they aren't re-discussed in later sessions.
 
+- Name: **Bibday** (formerly "Next Race", dropped because nextrace.io is an existing race finder with the same name). Name and slogan live in `src/lib/site.ts` (`SITE_NAME`, `SLOGAN`). The slogan "Find your next race." stays in English in every site language (owner's choice) and is rendered with `lang="en"` (`Slogan` component). Domain: buy `bibday.ro` (free as of 2026-10-08; `bibday.com` is taken but unused); until then the site runs on the Vercel address. The local folder and GitHub repo keep their old names.
 - Scope: Romania only, for now.
 - Sports: running, swimming, cycling, triathlon (more may be added — keep the sport list data-driven, not hard-coded across pages).
 - Tech stack: Next.js + Supabase (Postgres database, auth, admin table view). Chosen because the site will need dynamic data beyond a static list. Rich filtering is a key feature.

@@ -5,7 +5,7 @@ import { CONTACT_EMAIL } from "@/lib/site";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("About");
-  return { title: `${t("title")} — Next Race` };
+  return { title: { absolute: t("title") } };
 }
 
 export default async function AboutPage() {

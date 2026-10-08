@@ -9,7 +9,7 @@ import { isPast, today } from "@/lib/filters";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Favorites");
-  return { title: `${t("title")} — Next Race` };
+  return { title: t("title") };
 }
 
 export default async function FavoritesPage() {
