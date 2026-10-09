@@ -1,7 +1,7 @@
 /** Site-wide settings. */
 
 /** The site's name. A brand: the same in every language. */
-export const SITE_NAME = "Bibday";
+export const SITE_NAME = "Racely";
 
 /**
  * The slogan. Deliberately in English in every site language (the owner's choice), so
@@ -9,7 +9,7 @@ export const SITE_NAME = "Bibday";
  */
 export const SLOGAN = "Find your next race.";
 
-// TODO: replace with the real Bibday contact address.
+// TODO: replace with the real Racely contact address.
 export const CONTACT_EMAIL = "contact@example.com";
 
 /** Donation page. Donations only — no perks for donors (see CLAUDE.md, hosting). */

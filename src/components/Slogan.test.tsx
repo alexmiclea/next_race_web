@@ -13,7 +13,7 @@ describe("Slogan", () => {
     expect(SLOGAN).toBe("Find your next race.");
   });
 
-  it("belongs to Bibday", () => {
-    expect(SITE_NAME).toBe("Bibday");
+  it("belongs to Racely", () => {
+    expect(SITE_NAME).toBe("Racely");
   });
 });

@@ -60,7 +60,7 @@ export async function SiteHeader({
         className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3"
       >
         <Link href="/" aria-label={t("home")} className="text-lg font-extrabold tracking-tight">
-          Bib<span className="text-accent">day</span>
+          Race<span className="text-accent">ly</span>
         </Link>
 
         <div className="flex items-center gap-1 sm:gap-2">

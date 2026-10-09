@@ -7,7 +7,7 @@
 export type Point = { latitude: number; longitude: number };
 
 const NOMINATIM = "https://nominatim.openstreetmap.org/search";
-const USER_AGENT = "Bibday/0.1 (Romanian race calendar; admin edits)";
+const USER_AGENT = "Racely/0.1 (Romanian race calendar; admin edits)";
 
 /** Search texts to try, most precise first: "Cheia, Cluj", then "Cheia". */
 export function placeQueries(city: string | null, countyName: string | null): string[] {

@@ -1,5 +1,5 @@
 {
-  "name": "bibday-scraper",
+  "name": "racely-scraper",
   "private": true,
   "type": "module",
   "description": "Collects race listings from approved sources into a review queue.",
