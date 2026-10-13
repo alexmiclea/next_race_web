@@ -3,14 +3,14 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { FilterForm } from "@/components/FilterForm";
 import { RaceMap, type MapEvent } from "@/components/RaceMap";
 import { SportTag } from "@/components/SportTag";
-import { getFilterOptions, getUpcomingEvents } from "@/lib/events";
+import { getEvents, getFilterOptions } from "@/lib/events";
 import { parseFilters } from "@/lib/filters";
 import { formatEventDates } from "@/lib/format";
 import { eventSportList } from "@/lib/sports";
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("Map");
-  return { title: `${t("title")} — Next Race` };
+  return { title: t("title") };
 }
 
 export default async function MapPage({ searchParams }: PageProps<"/harta">) {
@@ -18,7 +18,11 @@ export default async function MapPage({ searchParams }: PageProps<"/harta">) {
   const t = await getTranslations("Map");
   const format = await getFormatter();
   const filters = parseFilters(params);
-  const [events, options] = await Promise.all([getUpcomingEvents(filters), getFilterOptions()]);
+  // The map only shows upcoming races, even if "De la" reaches into the past.
+  const [events, options] = await Promise.all([
+    getEvents(filters, { allowPast: false }),
+    getFilterOptions(),
+  ]);
 
   const located: MapEvent[] = events.flatMap((event) => {
     const sports = eventSportList(event.races);

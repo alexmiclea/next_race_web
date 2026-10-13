@@ -1,0 +1,69 @@
+import type { Metadata } from "next";
+import Link from "next/link";
+import { getTranslations } from "next-intl/server";
+import { EventCard } from "@/components/EventCard";
+import { FavoritesPrune } from "@/components/FavoritesPrune";
+import { getEventsByIds } from "@/lib/events";
+import { getFavoriteIds } from "@/lib/favorites-server";
+import { isPast, today } from "@/lib/filters";
+
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("Favorites");
+  return { title: t("title") };
+}
+
+export default async function FavoritesPage() {
+  const t = await getTranslations("Favorites");
+  const events = await getEventsByIds(await getFavoriteIds());
+  const todayDate = today();
+  const upcoming = events.filter((event) => !isPast(event, todayDate));
+  // Most recent first: the race you just did is the one you're looking for.
+  const past = events.filter((event) => isPast(event, todayDate)).reverse();
+
+  const list = (items: typeof events) => (
+    <ul className="flex flex-col gap-3">
+      {items.map((event) => (
+        <EventCard key={event.id} event={event} isFavorite refreshOnFavoriteChange />
+      ))}
+    </ul>
+  );
+
+  return (
+    <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
+      <FavoritesPrune keep={events.map((event) => event.id)} />
+      <header className="mb-6">
+        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
+        <p className="mt-2 text-lg text-muted">{t("tagline")}</p>
+      </header>
+
+      {events.length === 0 ? (
+        <div className="rounded-xl border border-dashed border-border p-6 text-center text-muted">
+          <p>{t("empty")}</p>
+          <Link href="/" className="mt-3 inline-block font-medium text-accent underline">
+            {t("browse")}
+          </Link>
+        </div>
+      ) : (
+        <>
+          {upcoming.length > 0 && (
+            <section aria-labelledby="upcoming-heading">
+              <h2 id="upcoming-heading" className="mb-3 text-xl font-bold">
+                {t("upcomingTitle")}
+              </h2>
+              {list(upcoming)}
+            </section>
+          )}
+          {past.length > 0 && (
+            <section aria-labelledby="past-heading" className={upcoming.length > 0 ? "mt-8" : ""}>
+              <h2 id="past-heading" className="mb-3 text-xl font-bold">
+                {t("pastTitle")}
+              </h2>
+              {list(past)}
+            </section>
+          )}
+        </>
+      )}
+      <p className="mt-6 text-sm text-muted">{t("storedOnDevice")}</p>
+    </main>
+  );
+}

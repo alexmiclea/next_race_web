@@ -6,13 +6,13 @@ Guidance for Claude when working in this repository. Keep this file short and cu
 
 ## Project
 
-**Next Race** — a website listing local endurance races in Romania: running, swimming, cycling, triathlon, and possibly other sports later.
+**Racely** (slogan: "Find your next race.") — a website listing local endurance races in Romania: running, swimming, cycling, triathlon, and possibly other sports later.
 
 The goal is to help athletes find upcoming races near them: what, where, when, distance, and how to sign up.
 
 ### Status
 
-Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: ~40 approved upcoming events — mostly running (scraped), plus a few cycling, swimming and triathlon events added by hand (`source = 'manual'`). Each sport has its own colour (running orange, swimming light blue, cycling green, triathlon purple; tokens in `globals.css`, logic in `src/lib/sports.ts`). Live at https://next-race-web.vercel.app (Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: admin review screen, scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`), custom domain.
+Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: ~40 approved upcoming events — mostly running (scraped), plus a few cycling, swimming and triathlon events added by hand (`source = 'manual'`). Each sport has its own colour (running orange, swimming light blue, cycling green, triathlon purple; tokens in `globals.css`, logic in `src/lib/sports.ts`). Live at https://www.racely.ro (`racely.ro` and https://next-race-web.vercel.app also work; Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`).
 
 ### Layout
 
@@ -34,6 +34,7 @@ Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `
 
 Record decisions here so they aren't re-discussed in later sessions.
 
+- Name: **Racely** (formerly "Next Race", dropped because nextrace.io is an existing race finder with the same name; briefly "Bibday" before the owner settled on Racely). Name and slogan live in `src/lib/site.ts` (`SITE_NAME`, `SLOGAN`). The slogan "Find your next race." stays in English in every site language (owner's choice) and is rendered with `lang="en"` (`Slogan` component). Domain: `racely.ro`, registered 2026-10-09 at Host-Age.ro (`racely.com` and `racely.io` are taken, `racely.eu` was free). DNS is Host-Age's free DNS (nameservers `ns22`/`ns23.host-age.com`), not Vercel DNS, so the domain stays independent of the host: `A @ → 216.198.79.1` and `CNAME www → <id>.vercel-dns-017.com` (values from Vercel → Settings → Domains). `www.racely.ro` is the main address; `racely.ro` redirects to it. New .ro domains must pass RoTLD's identity check (ID upload at rotld.ro) within 30 days or get suspended. The local folder and GitHub repo keep their old names.
 - Scope: Romania only, for now.
 - Sports: running, swimming, cycling, triathlon (more may be added — keep the sport list data-driven, not hard-coded across pages).
 - Tech stack: Next.js + Supabase (Postgres database, auth, admin table view). Chosen because the site will need dynamic data beyond a static list. Rich filtering is a key feature.
@@ -54,6 +55,10 @@ Record decisions here so they aren't re-discussed in later sessions.
 - No paid services beyond the owner's Claude subscription. In particular, never call the Anthropic API (it is billed separately): any AI work happens inside a Claude Code session, with scripts only preparing input and checking/saving output. Flag any cost before building something that would incur it.
 
 - No mobile app for now. The website must be fully responsive (mobile-first) instead.
+- Cookies: only functional cookies the visitor asks for (`theme`, `favorites`, `cookie_notice`), listed on `/cookies`. So the banner (`CookieNotice`) is informational, not a consent form. Adding analytics, ads or any tracking requires turning it into a real accept/reject consent banner first, and updating `/cookies`.
+- Favourites: no accounts — event ids in the `favorites` cookie (max 100, `src/lib/favorites.ts`), read on the server to fill the stars and the `/favorite` page ("Urmează" and "Trecute" sections). The header count shows upcoming favourites only.
+- Past races: no separate section. Lists start today by default; picking an earlier "De la" date shows past races too (`listStart` in `src/lib/filters.ts`). Past races get an "A avut loc" tag and a faded card; their page shows a notice and hides the registration button. The map always shows upcoming races only.
+- Admin: `/admin` (review queue: pending / published / hidden; approve, reject, edit an event and its distances). Login by emailed magic link (Supabase Auth, sign-ups turned off; the only account is the owner's, created with the secret key). The `admins` table + `is_admin()` and row-level-security policies (migration `20261008000000_admins.sql`) are the real protection; pages also check (`src/lib/admin/session.ts`). Signed-in admins can read unapproved events, so every public query filters `status = 'approved'` explicitly. `src/proxy.ts` refreshes the login session, only for requests that carry a login cookie. Add a race by hand at `/admin/concurs/nou`; saving looks up map coordinates when the place changes. Signed-in admin sees an admin bar (Editează / Ascunde) on public race pages and an "Admin" link in the header.
 - Supabase project: `ckzhgqaalsgwiomlbbdf` (EU). Env vars in `.env.local` (see `.env.example`). The secret key is server-only and must never be committed or pasted into chat.
 - The scraper is generic and reusable: websites are config entries in `scraper/src/sources.ts` (URL, sport, parser); parsers in `scraper/src/parsers/` handle page layouts, not specific sites. Don't write site-specific scraper code.
 - Scrape sources (add each new one here once checked):

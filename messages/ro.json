@@ -1,13 +1,49 @@
 {
   "Metadata": {
-    "title": "Next Race — concursuri de alergare, ciclism, înot și triatlon în România",
+    "title": "Racely — concursuri de alergare, ciclism, înot și triatlon în România",
     "description": "Găsește următorul concurs: alergare, ciclism, înot și triatlon în toată România. Dată, locație, distanțe și înscriere."
   },
   "Nav": {
     "races": "Concursuri",
     "map": "Hartă",
     "about": "Despre",
-    "home": "Next Race — pagina principală"
+    "home": "Racely — pagina principală",
+    "favorites": "Favorite",
+    "favoritesCount": "{count, plural, one {# concurs salvat} few {# concursuri salvate} other {# de concursuri salvate}}",
+    "menu": "Meniu",
+    "admin": "Admin",
+    "main": "Navigare principală"
+  },
+  "Favorites": {
+    "title": "Favorite",
+    "tagline": "Concursurile pe care le-ai salvat cu steluța.",
+    "empty": "Încă nu ai salvat niciun concurs. Apasă pe steluța de lângă un concurs ca să-l găsești aici.",
+    "browse": "Vezi concursurile",
+    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont. Concursurile care au avut loc rămân la „Trecute”.",
+    "upcomingTitle": "Urmează",
+    "pastTitle": "Trecute",
+    "add": "Adaugă {name} la favorite",
+    "remove": "Scoate {name} de la favorite"
+  },
+  "CookieNotice": {
+    "label": "Despre cookie-uri",
+    "text": "Folosim doar cookie-uri funcționale, pentru tema aleasă și concursurile favorite. Nu folosim cookie-uri de urmărire sau reclame.",
+    "more": "Detalii",
+    "ok": "Am înțeles"
+  },
+  "Cookies": {
+    "title": "Cookie-uri",
+    "intro": "Racely folosește doar câteva cookie-uri funcționale, care țin minte alegerile tale pe acest dispozitiv. Nu au nevoie de cont și nu sunt trimise nimănui altcuiva.",
+    "listTitle": "Ce cookie-uri folosim",
+    "theme": "Tema aleasă (luminoasă, întunecată sau ca pe dispozitiv). Se păstrează un an.",
+    "favorites": "Concursurile salvate cu steluța. Se păstrează un an.",
+    "notice": "Ține minte că ai văzut acest anunț despre cookie-uri. Se păstrează un an.",
+    "noTrackingTitle": "Fără urmărire",
+    "noTracking": "Nu folosim cookie-uri de analiză, de publicitate sau de urmărire și nu creăm profiluri ale vizitatorilor.",
+    "thirdPartyTitle": "Servicii externe",
+    "thirdParty": "Harta afișează imagini de la OpenStreetMap, care primesc adresa IP a dispozitivului tău, ca orice site care încarcă imagini. Butonul „Buy me a coffee” este un simplu link: pagina Buy Me a Coffee se încarcă doar dacă îl apeși.",
+    "deleteTitle": "Cum le ștergi",
+    "delete": "Poți șterge oricând cookie-urile din setările browserului. Vei pierde tema aleasă și lista de favorite de pe acest dispozitiv."
   },
   "Theme": {
     "label": "Temă: {theme}",
@@ -17,7 +53,8 @@
   },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
-    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului."
+    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
+    "cookies": "Cookie-uri"
   },
   "Filters": {
     "title": "Filtrează",
@@ -27,6 +64,7 @@
     "from": "De la",
     "to": "Până la",
     "pickDate": "Alege data",
+    "today": "Azi",
     "any": "Toate",
     "anyCounty": "Toate județele",
     "moreCounties": "+{count}",
@@ -44,7 +82,6 @@
     "includeVirtual": "Include curse virtuale"
   },
   "Home": {
-    "title": "Următorul tău concurs",
     "tagline": "Alergare, ciclism, înot și triatlon — în toată România.",
     "count": "{count, plural, =0 {Niciun concurs} one {# concurs} few {# concursuri} other {# de concursuri}}",
     "empty": "Niciun concurs nu se potrivește filtrelor. Încearcă să le lărgești.",
@@ -53,6 +90,8 @@
   "Event": {
     "virtual": "Oriunde",
     "virtualTag": "Virtual",
+    "pastTag": "A avut loc",
+    "pastNotice": "Acest concurs a avut loc. Pe site-ul organizatorului găsești de obicei rezultatele și informații despre ediția următoare.",
     "unknownPlace": "Locație necunoscută",
     "details": "Detalii",
     "back": "Înapoi la concursuri",
@@ -78,16 +117,101 @@
     "legend": "Legendă: culorile sporturilor"
   },
   "About": {
-    "title": "Despre Next Race",
-    "intro": "Next Race adună într-un singur loc concursurile de alergare, ciclism, înot și triatlon din România, ca să-ți găsești ușor următoarea cursă.",
+    "title": "Despre Racely",
+    "intro": "Racely adună într-un singur loc concursurile de alergare, ciclism, înot și triatlon din România, ca să-ți găsești ușor următoarea cursă.",
     "dataTitle": "De unde vin datele",
     "data": "Concursurile sunt preluate din calendare publice și verificate manual înainte de publicare. Fiecare concurs are un link către sursa informației și către site-ul organizatorului.",
     "organizersTitle": "Ești organizator?",
     "organizers": "În curând vei putea adăuga și actualiza singur concursurile tale. Până atunci, scrie-ne dacă vrei să corectăm sau să adăugăm un eveniment.",
-    "supportTitle": "Susține Next Race",
-    "support": "Next Race este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, poți susține proiectul cu o donație — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
+    "supportTitle": "Susține Racely",
+    "support": "Racely este gratuit și fără reclame. Dacă te-a ajutat să-ți găsești următorul concurs, poți susține proiectul cu o donație — ne ajută să adăugăm mai multe concursuri și să ținem site-ul la zi.",
     "contactTitle": "Contact",
     "contact": "Pentru corecturi, sugestii sau parteneriate, scrie-ne la"
+  },
+  "Admin": {
+    "title": "Administrare",
+    "logOut": "Ieși din cont",
+    "tabs": "Concursuri după stare",
+    "status": {
+      "pending": "De verificat",
+      "approved": "Publicate",
+      "rejected": "Ascunse"
+    },
+    "empty": {
+      "pending": "Nimic de verificat. Toate concursurile au fost revizuite.",
+      "approved": "Niciun concurs publicat.",
+      "rejected": "Niciun concurs ascuns."
+    },
+    "saved": "Modificările au fost salvate.",
+    "approve": "Publică",
+    "reject": "Respinge",
+    "hide": "Ascunde",
+    "backToQueue": "Înapoi la verificare",
+    "edit": "Editează",
+    "viewOnSite": "Vezi pe site",
+    "organizerSite": "Site-ul organizatorului",
+    "source": "Sursa",
+    "note": "Notă",
+    "noPlace": "fără locație",
+    "noDistances": "fără distanțe",
+    "backToList": "Înapoi la listă",
+    "addEvent": "Adaugă concurs",
+    "hideConfirm": "Ascunzi acest concurs? Nu va mai apărea pe site; îl poți publica din nou din Administrare.",
+    "adminLink": "Admin",
+    "login": {
+      "title": "Autentificare administrator",
+      "intro": "Introdu adresa de email. Dacă are acces, vei primi un link de autentificare.",
+      "email": "Email",
+      "send": "Trimite linkul",
+      "sending": "Se trimite…",
+      "sent": "Dacă adresa are acces, ți-am trimis un email cu un link de autentificare. Deschide-l în acest browser.",
+      "invalid": "Adresa de email nu pare corectă.",
+      "tooMany": "Prea multe încercări. Așteaptă câteva minute și încearcă din nou.",
+      "badLink": "Linkul a expirat sau a fost deschis în alt browser. Cere unul nou."
+    },
+    "form": {
+      "details": "Detalii",
+      "name": "Nume",
+      "startDate": "Data de început",
+      "endDate": "Data de sfârșit (opțional)",
+      "startTime": "Ora de start (opțional)",
+      "organizer": "Organizator",
+      "city": "Localitate",
+      "county": "Județ",
+      "virtual": "Concurs virtual (oriunde)",
+      "website": "Site-ul concursului",
+      "registration": "Link de înscriere",
+      "races": "Distanțe",
+      "racesHelp": "Câte un rând pentru fiecare distanță sau categorie. Rândurile goale sunt ignorate.",
+      "raceLabel": "Denumire (ex. 21km, Copii)",
+      "raceKm": "Kilometri",
+      "raceSport": "Sport",
+      "remove": "Șterge",
+      "review": "Stare",
+      "status": {
+        "pending": "De verificat",
+        "approved": "Publicat",
+        "rejected": "Ascuns"
+      },
+      "note": "Notă internă (nu apare pe site)",
+      "save": "Salvează",
+      "saving": "Se salvează…"
+    },
+    "errors": {
+      "nameRequired": "Numele este obligatoriu.",
+      "startDate": "Data de început lipsește sau nu e corectă.",
+      "endDate": "Data de sfârșit nu e corectă.",
+      "endBeforeStart": "Data de sfârșit e înaintea celei de început.",
+      "startTime": "Ora de start nu e corectă.",
+      "county": "Județul nu e corect.",
+      "websiteUrl": "Linkul site-ului trebuie să înceapă cu https://.",
+      "registrationUrl": "Linkul de înscriere trebuie să înceapă cu https://.",
+      "status": "Alege o stare.",
+      "raceLabel": "Fiecare distanță are nevoie de o denumire.",
+      "raceKm": "Kilometrii trebuie să fie un număr.",
+      "raceSport": "Alege sportul pentru fiecare distanță.",
+      "saveFailed": "Salvarea nu a reușit. Încearcă din nou."
+    }
   },
   "NotFound": {
     "title": "Pagina nu există",

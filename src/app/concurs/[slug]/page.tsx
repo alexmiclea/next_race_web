@@ -2,9 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, permanentRedirect } from "next/navigation";
 import { getFormatter, getTranslations } from "next-intl/server";
+import { AdminEventBar } from "@/components/AdminEventBar";
+import { FavoriteButton } from "@/components/FavoriteButton";
+import { PastTag } from "@/components/PastTag";
 import { SportTag } from "@/components/SportTag";
 import { VirtualTag } from "@/components/VirtualTag";
 import { eventPlace, eventSports, getEvent } from "@/lib/events";
+import { getAdminIfSignedIn } from "@/lib/admin/session";
+import { getFavoriteIds } from "@/lib/favorites-server";
+import { isPast, today } from "@/lib/filters";
 import { formatEventDates } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
 import { eventSportList, sportClass } from "@/lib/sports";
@@ -14,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">)
   if (!event) return {};
   const place = eventPlace(event);
   return {
-    title: `${event.name} — Next Race`,
+    title: event.name,
     description:
       event.description ??
       [event.start_date, place, eventSports(event).join(", ")].filter(Boolean).join(" · "),
@@ -33,12 +39,18 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
   const place = event.is_virtual ? t("virtual") : (eventPlace(event) ?? t("unknownPlace"));
   const races = event.races.filter((race) => race.label !== "?");
   const sports = eventSportList(event.races);
-  const primaryUrl = event.registration_url ?? event.website_url;
+  const past = isPast(event, today());
+  // Registration is closed for a past race; the organizer's site may have results.
+  const registrationUrl = past ? null : event.registration_url;
+  const primaryUrl = registrationUrl ?? event.website_url;
+  const [favoriteIds, admin] = await Promise.all([getFavoriteIds(), getAdminIfSignedIn()]);
+  const isFavorite = favoriteIds.includes(event.id);
   const row = "grid gap-1 border-t border-border py-4 sm:grid-cols-[10rem_1fr]";
   const label = "text-sm font-semibold text-muted";
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
+      {admin && <AdminEventBar eventId={event.id} />}
       <Link href="/" className="text-sm font-medium text-muted hover:text-foreground">
         ← {t("back")}
       </Link>
@@ -49,9 +61,24 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
             <SportTag key={sport.slug} slug={sport.slug} name={sport.name} />
           ))}
           {event.is_virtual && <VirtualTag label={t("virtualTag")} />}
+          {past && <PastTag label={t("pastTag")} />}
         </p>
-        <h1 className="mt-1 text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
+        <div className="mt-1 flex items-start justify-between gap-2">
+          <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
+          <FavoriteButton
+            eventId={event.id}
+            eventName={event.name}
+            initial={isFavorite}
+            upcoming={!past}
+          />
+        </div>
       </header>
+
+      {past && (
+        <p role="status" className="mt-4 rounded-xl border border-border bg-surface p-4">
+          {t("pastNotice")}
+        </p>
+      )}
 
       {event.description && (
         <section aria-labelledby="about-heading" className="mt-6">
@@ -138,10 +165,10 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
             rel="noopener"
             className="inline-flex h-12 items-center justify-center rounded-lg bg-accent px-6 font-semibold text-on-accent hover:opacity-90"
           >
-            {event.registration_url ? t("register") : t("website")} ↗
+            {registrationUrl ? t("register") : t("website")} ↗
           </a>
         )}
-        {event.registration_url && event.website_url && (
+        {registrationUrl && event.website_url && (
           <a
             href={event.website_url}
             rel="noopener"

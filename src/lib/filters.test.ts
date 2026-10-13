@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { filtersQuery, hasFilters, parseFilters, today } from "./filters";
+import { filtersQuery, hasFilters, isPast, listStart, parseFilters, today } from "./filters";
 
 describe("parseFilters", () => {
   it("reads every filter from the URL", () => {
@@ -131,6 +131,40 @@ describe("hasFilters", () => {
 
   it("is false with no counties and nothing else", () => {
     expect(hasFilters({ counties: [] })).toBe(false);
+  });
+});
+
+describe("listStart", () => {
+  const TODAY = "2026-10-07";
+
+  it("starts today by default, hiding past races", () => {
+    expect(listStart({}, TODAY)).toBe(TODAY);
+  });
+
+  it("starts at a later chosen date", () => {
+    expect(listStart({ from: "2027-04-01" }, TODAY)).toBe("2027-04-01");
+  });
+
+  it("reaches back into past races when an earlier date is chosen", () => {
+    expect(listStart({ from: "2026-01-01" }, TODAY)).toBe("2026-01-01");
+  });
+
+  it("never goes before today where past races don't belong (the map)", () => {
+    expect(listStart({ from: "2026-01-01" }, TODAY, { allowPast: false })).toBe(TODAY);
+    expect(listStart({ from: "2027-04-01" }, TODAY, { allowPast: false })).toBe("2027-04-01");
+  });
+});
+
+describe("isPast", () => {
+  const TODAY = "2026-10-07";
+
+  it("is past once the last day is before today", () => {
+    expect(isPast({ end_date: "2026-10-06" }, TODAY)).toBe(true);
+  });
+
+  it("is not past on its last day, or before", () => {
+    expect(isPast({ end_date: "2026-10-07" }, TODAY)).toBe(false);
+    expect(isPast({ end_date: "2027-01-01" }, TODAY)).toBe(false);
   });
 });
 

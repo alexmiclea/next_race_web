@@ -30,6 +30,10 @@
   --other: #475569;
   --other-soft: #f1f5f9;
   --other-ink: #334155;
+  /* "A avut loc" label on past races. */
+  --past: #b91c1c;
+  --past-soft: #fee2e2;
+  --past-ink: #991b1b;
 }
 
 @theme inline {
@@ -44,6 +48,9 @@
   --color-sport: var(--sport);
   --color-sport-soft: var(--sport-soft);
   --color-sport-ink: var(--sport-ink);
+  --color-past: var(--past);
+  --color-past-soft: var(--past-soft);
+  --color-past-ink: var(--past-ink);
   --font-sans: var(--font-geist-sans);
 }
 
@@ -75,6 +82,9 @@
   --other: #94a3b8;
   --other-soft: #1e2530;
   --other-ink: #cbd5e1;
+  --past: #f87171;
+  --past-soft: #3a1414;
+  --past-ink: #fca5a5;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -104,6 +114,9 @@
     --other: #94a3b8;
     --other-soft: #1e2530;
     --other-ink: #cbd5e1;
+    --past: #f87171;
+    --past-soft: #3a1414;
+    --past-ink: #fca5a5;
   }
 }
 
