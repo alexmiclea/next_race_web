@@ -14,7 +14,7 @@ export async function SiteFooter() {
             <strong className="text-foreground">{SITE_NAME}</strong> — <Slogan />
           </p>
           <p>{t("tagline")}</p>
-          <p>{t("draft")}</p>
+          <p>{t("disclaimer")}</p>
           <p>
             <Link href="/cookies" className="underline hover:text-foreground">
               {t("cookies")}

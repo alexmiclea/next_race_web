@@ -53,7 +53,7 @@
   },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
-    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
+    "disclaimer": "Datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
     "cookies": "Cookie-uri"
   },
   "Filters": {
