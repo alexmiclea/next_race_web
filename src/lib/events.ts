@@ -114,20 +114,26 @@ export async function countUpcoming(ids: string[]): Promise<number> {
   return count ?? 0;
 }
 
+/** Review status of an event; only "approved" events are public. */
+export type EventStatus = "pending" | "approved" | "rejected";
+
 /**
  * One approved event by its slug (or, for old links, its id), or null if it doesn't
- * exist or isn't public.
+ * exist or isn't public. With `includeUnapproved` (only for a signed-in admin, who may
+ * preview events before publishing them) any status is returned; row-level security
+ * still hides unapproved events from everyone else.
  */
-export async function getEvent(slugOrId: string): Promise<Event | null> {
+export async function getEvent(
+  slugOrId: string,
+  { includeUnapproved = false }: { includeUnapproved?: boolean } = {},
+): Promise<(Event & { status: EventStatus }) | null> {
   const { column, value } = eventLookup(slugOrId);
   const supabase = await createClient();
-  const { data, error } = await supabase
-    .from("events")
-    .select(EVENT_FIELDS)
-    .eq("status", "approved")
-    .eq(column, value)
+  let query = supabase.from("events").select(`${EVENT_FIELDS}, status`).eq(column, value);
+  if (!includeUnapproved) query = query.eq("status", "approved");
+  const { data, error } = await query
     .maybeSingle()
-    .returns<Event | null>();
+    .returns<(Event & { status: EventStatus }) | null>();
   if (error) throw new Error(`Loading event failed: ${error.message}`);
   return data && sortRaces(data);
 }
@@ -143,7 +149,7 @@ export async function getFilterOptions(): Promise<{ sports: Sport[]; counties: C
   return { sports: sports.data, counties: counties.data };
 }
 
-function sortRaces(event: Event): Event {
+function sortRaces<T extends Event>(event: T): T {
   return { ...event, races: [...event.races].sort((a, b) => a.sort_order - b.sort_order) };
 }
 
