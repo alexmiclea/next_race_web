@@ -31,10 +31,7 @@ export default async function FavoritesPage() {
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
       <FavoritesPrune keep={events.map((event) => event.id)} />
-      <header className="mb-6">
-        <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
-        <p className="mt-2 text-lg text-muted">{t("tagline")}</p>
-      </header>
+      <h1 className="mb-6 text-3xl font-extrabold tracking-tight sm:text-4xl">{t("title")}</h1>
 
       {events.length === 0 ? (
         <div className="rounded-xl border border-dashed border-border p-6 text-center text-muted">
