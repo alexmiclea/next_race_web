@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { DonateLink } from "@/components/DonateLink";
 import { Slogan } from "@/components/Slogan";
-import { SITE_NAME } from "@/lib/site";
+import { CONTACT_PATH, SITE_NAME } from "@/lib/site";
 
 export async function SiteFooter() {
   const t = await getTranslations("Footer");
@@ -15,7 +15,10 @@ export async function SiteFooter() {
           </p>
           <p>{t("tagline")}</p>
           <p>{t("disclaimer")}</p>
-          <p>
+          <p className="flex gap-4">
+            <Link href={CONTACT_PATH} className="underline hover:text-foreground">
+              {t("contact")}
+            </Link>
             <Link href="/cookies" className="underline hover:text-foreground">
               {t("cookies")}
             </Link>
