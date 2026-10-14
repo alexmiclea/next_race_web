@@ -69,6 +69,18 @@ export function skipReason(url: string, page?: { text: string }): string | null 
   return null;
 }
 
+/**
+ * The page to write a race's description from: a page set by hand in
+ * `description_source_url` (e.g. a listing page when the organizer only has Facebook or a
+ * JavaScript-only site), otherwise the race's own website.
+ */
+export function descriptionSourceUrl(event: {
+  website_url: string | null;
+  description_source_url: string | null;
+}): string | null {
+  return event.description_source_url || event.website_url;
+}
+
 /** One race waiting for a description, as written to todo.json by describe:prepare. */
 export type TodoItem = {
   id: string;

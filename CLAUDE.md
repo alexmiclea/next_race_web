@@ -12,7 +12,7 @@ The goal is to help athletes find upcoming races near them: what, where, when, d
 
 ### Status
 
-Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: ~40 approved upcoming events — mostly running (scraped), plus a few cycling, swimming and triathlon events added by hand (`source = 'manual'`). Each sport has its own colour (running orange, swimming light blue, cycling green, triathlon purple; tokens in `globals.css`, logic in `src/lib/sports.ts`). Live at https://www.racely.ro (`racely.ro` and https://next-race-web.vercel.app also work; Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`).
+Draft site: race list with filters (`/`), race detail (`/concurs/[slug]`, e.g. `/concurs/bucharest-marathon-2026`; old `/concurs/<uuid>` links redirect), map (`/harta`, Leaflet + OpenStreetMap tiles) and about page (`/despre`). Data: ~120 events, mostly running — scraped (`source = 'vladcarbune.ro'`), added by hand (`'manual'`) or imported from the Oct 2026 research list (`'research'`, `research/race-urls-*.csv`, local only); many still `pending` review, with distances `?`. Each sport has its own colour (running orange, swimming light blue, cycling green, triathlon purple; tokens in `globals.css`, logic in `src/lib/sports.ts`). Live at https://www.racely.ro (`racely.ro` and https://next-race-web.vercel.app also work; Vercel deploys `main` automatically; other branches get preview URLs). Not built yet: scheduled scraping, organizer accounts, English, real contact email (placeholder in `src/lib/site.ts`).
 
 ### Layout
 
@@ -46,7 +46,7 @@ Record decisions here so they aren't re-discussed in later sessions.
 - Race data sourcing (business plan: become the platform organizers submit to; until then, fill the database by scraping):
   - Scraped races and, later, organizer submissions go into one review queue (`pending` / `approved` / `rejected`). Only approved races are public. The owner manually reviews every entry.
   - Scrape facts only (name, date, location, distances, registration link). Don't copy descriptions or photos verbatim. Respect `robots.txt` and terms of use. Prefer organizers' own sites over other race-listing sites (EU database right; future competitors).
-  - Descriptions: never copied. Claude writes them in a Claude Code session (see **Writing race descriptions** below) using only facts stated on the organizer's page; code rejects any description whose evidence quotes aren't on the page, or that mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages are skipped (login wall).
+  - Descriptions: never copied. Claude writes them in a Claude Code session (see **Writing race descriptions** below) using only facts stated on the organizer's page; code rejects any description whose evidence quotes aren't on the page, or that mentions a year or price. The site labels it as an automatic summary and links the source page. Facebook pages and JavaScript-only sites are skipped (no readable text); for those, set `events.description_source_url` to another real page about the race (organizer subpage, listing such as biklo.ro / sportic.ro, or a news article) and the description is written from that page instead.
   - Always store and show the source URL for each race.
   - Detect duplicates (similar name + same date + city) across sources and runs; update or flag instead of creating duplicates.
   - The scraper runs on a schedule via GitHub Actions (not Vercel Cron), one source at a time.
@@ -110,7 +110,7 @@ To add a website, add an entry to `scraper/src/sources.ts`; add a parser only if
 
 ### Writing race descriptions
 
-When asked to write descriptions: run `npm run describe:prepare`, read `scraper/output/descriptions/todo.json` and each page in `pages/`, write `drafts.json`, then run `npm run describe:apply` and fix or drop anything it rejects.
+When asked to write descriptions: run `npm run describe:prepare`, read `scraper/output/descriptions/todo.json` and each page in `pages/`, write `drafts.json`, then run `npm run describe:apply` and fix or drop anything it rejects. Pages come from `description_source_url` when set, otherwise `website_url`. Events still without a readable page (Oct 2026): Facebook-only or JavaScript-only sites such as Dac Warrior, Ultrabug, Maratonul Nordului, Mediaș Summer Trails, the Ultra Zărand races and several Arad/Cluj winter trails.
 
 `drafts.json` is a list of `{ "id", "description", "evidence": [...], "note" }`, one per race in `todo.json`. Rules for each description:
 
