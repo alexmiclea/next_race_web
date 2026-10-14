@@ -16,10 +16,9 @@
   },
   "Favorites": {
     "title": "Favorite",
-    "tagline": "Concursurile pe care le-ai salvat cu steluța.",
     "empty": "Încă nu ai salvat niciun concurs. Apasă pe steluța de lângă un concurs ca să-l găsești aici.",
     "browse": "Vezi concursurile",
-    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont. Concursurile care au avut loc rămân la „Trecute”.",
+    "storedOnDevice": "Favoritele sunt salvate doar pe acest dispozitiv, într-un cookie, fără cont.",
     "upcomingTitle": "Urmează",
     "pastTitle": "Trecute",
     "add": "Adaugă {name} la favorite",
@@ -53,7 +52,8 @@
   },
   "Footer": {
     "tagline": "Calendarul concursurilor de anduranță din România.",
-    "draft": "Versiune de test — datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
+    "disclaimer": "Datele pot conține greșeli. Verifică mereu pe site-ul organizatorului.",
+    "contact": "Contact",
     "cookies": "Cookie-uri"
   },
   "Filters": {

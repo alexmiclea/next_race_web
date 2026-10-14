@@ -9,8 +9,11 @@ export const SITE_NAME = "Racely";
  */
 export const SLOGAN = "Find your next race.";
 
-// TODO: replace with the real Racely contact address.
-export const CONTACT_EMAIL = "contact@example.com";
+/** Public contact address; forwarded to the owner's inbox (see CLAUDE.md, domain). */
+export const CONTACT_EMAIL = "contact@racely.ro";
+
+/** The contact section on the About page; the footer links straight to it. */
+export const CONTACT_PATH = "/despre#contact";
 
 /** Donation page. Donations only — no perks for donors (see CLAUDE.md, hosting). */
 export const DONATE_URL = "https://buymeacoffee.com/alexeimiclea";
