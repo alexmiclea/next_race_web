@@ -158,6 +158,8 @@
     "addEvent": "Adaugă concurs",
     "hideConfirm": "Ascunzi acest concurs? Nu va mai apărea pe site; îl poți publica din nou din Administrare.",
     "adminLink": "Admin",
+    "preview": "Previzualizare",
+    "previewNotice": "Nepublicat ({status}): doar tu vezi această pagină.",
     "login": {
       "title": "Autentificare administrator",
       "intro": "Introdu adresa de email. Dacă are acces, vei primi un link de autentificare.",

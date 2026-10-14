@@ -15,12 +15,21 @@ import { formatEventDates } from "@/lib/format";
 import { eventPath } from "@/lib/paths";
 import { eventSportList, sportClass } from "@/lib/sports";
 
+/** A signed-in admin also sees races that aren't published yet (a preview). */
+async function loadEvent(slug: string) {
+  const admin = await getAdminIfSignedIn();
+  const event = await getEvent(slug, { includeUnapproved: admin !== null });
+  return { admin, event };
+}
+
 export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">): Promise<Metadata> {
-  const event = await getEvent((await params).slug);
+  const { event } = await loadEvent((await params).slug);
   if (!event) return {};
   const place = eventPlace(event);
   return {
     title: event.name,
+    // A preview must never end up in search results.
+    ...(event.status !== "approved" && { robots: { index: false, follow: false } }),
     description:
       event.description ??
       [event.start_date, place, eventSports(event).join(", ")].filter(Boolean).join(" · "),
@@ -29,7 +38,7 @@ export async function generateMetadata({ params }: PageProps<"/concurs/[slug]">)
 
 export default async function EventPage({ params }: PageProps<"/concurs/[slug]">) {
   const { slug } = await params;
-  const event = await getEvent(slug);
+  const { admin, event } = await loadEvent(slug);
   if (!event) notFound();
   // Old links used the event id; send them to the readable address.
   if (decodeURIComponent(slug) !== event.slug) permanentRedirect(eventPath(event));
@@ -43,14 +52,15 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
   // Registration is closed for a past race; the organizer's site may have results.
   const registrationUrl = past ? null : event.registration_url;
   const primaryUrl = registrationUrl ?? event.website_url;
-  const [favoriteIds, admin] = await Promise.all([getFavoriteIds(), getAdminIfSignedIn()]);
-  const isFavorite = favoriteIds.includes(event.id);
+  const isFavorite = (await getFavoriteIds()).includes(event.id);
+  // Not published yet: only the admin sees this page, so no favourites or map link.
+  const preview = event.status !== "approved";
   const row = "grid gap-1 border-t border-border py-4 sm:grid-cols-[10rem_1fr]";
   const label = "text-sm font-semibold text-muted";
 
   return (
     <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:py-10">
-      {admin && <AdminEventBar eventId={event.id} />}
+      {admin && <AdminEventBar eventId={event.id} status={event.status} />}
       <Link href="/" className="text-sm font-medium text-muted hover:text-foreground">
         ← {t("back")}
       </Link>
@@ -65,12 +75,14 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
         </p>
         <div className="mt-1 flex items-start justify-between gap-2">
           <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl">{event.name}</h1>
-          <FavoriteButton
-            eventId={event.id}
-            eventName={event.name}
-            initial={isFavorite}
-            upcoming={!past}
-          />
+          {!preview && (
+            <FavoriteButton
+              eventId={event.id}
+              eventName={event.name}
+              initial={isFavorite}
+              upcoming={!past}
+            />
+          )}
         </div>
       </header>
 
@@ -118,7 +130,7 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
           <dt className={label}>{t("where")}</dt>
           <dd>
             {place}
-            {event.latitude !== null && (
+            {event.latitude !== null && !preview && (
               <>
                 {" · "}
                 <Link

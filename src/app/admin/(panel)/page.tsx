@@ -79,11 +79,9 @@ export default async function AdminQueuePage({ searchParams }: PageProps<"/admin
                 <Link href={`/admin/concurs/${event.id}`} className="font-semibold text-accent underline">
                   {t("edit")}
                 </Link>
-                {event.status === "approved" && (
-                  <Link href={eventPath(event)} className="underline">
-                    {t("viewOnSite")}
-                  </Link>
-                )}
+                <Link href={eventPath(event)} className="underline">
+                  {event.status === "approved" ? t("viewOnSite") : t("preview")}
+                </Link>
                 {event.website_url && (
                   <a href={event.website_url} rel="noopener" target="_blank" className="underline">
                     {t("organizerSite")} ↗
