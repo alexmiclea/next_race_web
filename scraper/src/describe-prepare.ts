@@ -8,7 +8,7 @@
 import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { DESCRIPTIONS_DIR } from './describe-paths.ts';
-import { pageText, skipReason, type TodoItem } from './lib/describe.ts';
+import { descriptionSourceUrl, pageText, skipReason, type TodoItem } from './lib/describe.ts';
 import { fetchPage } from './lib/fetch.ts';
 import { connect } from './lib/supabase.ts';
 
@@ -18,14 +18,21 @@ if (!db) throw new Error('Set SUPABASE_URL and SUPABASE_SECRET_KEY in scraper/.e
 
 let query = db
   .from('events')
-  .select('id, name, city, website_url, races(label)')
+  .select('id, name, city, website_url, description_source_url, races(label)')
   .neq('status', 'rejected')
-  .not('website_url', 'is', null)
+  .or('website_url.not.is.null,description_source_url.not.is.null')
   .order('start_date');
 if (!force) query = query.is('description', null);
 
 const { data: events, error } = await query.returns<
-  { id: string; name: string; city: string | null; website_url: string; races: { label: string }[] }[]
+  {
+    id: string;
+    name: string;
+    city: string | null;
+    website_url: string | null;
+    description_source_url: string | null;
+    races: { label: string }[];
+  }[]
 >();
 if (error) throw new Error(`Loading events failed: ${error.message}`);
 
@@ -36,13 +43,14 @@ await mkdir(join(DESCRIPTIONS_DIR, 'pages'), { recursive: true });
 const todo: TodoItem[] = [];
 let skipped = 0;
 for (const event of events) {
-  const label = `${event.name} (${event.website_url})`;
-  let reason = skipReason(event.website_url);
+  const url = descriptionSourceUrl(event)!;
+  const label = `${event.name} (${url})`;
+  let reason = skipReason(url);
   let page: { text: string; truncated: boolean } | undefined;
   if (!reason) {
     try {
-      page = pageText(await fetchPage(event.website_url));
-      reason = skipReason(event.website_url, page);
+      page = pageText(await fetchPage(url));
+      reason = skipReason(url, page);
     } catch (fetchError) {
       reason = (fetchError as Error).message;
     }
@@ -60,7 +68,7 @@ for (const event of events) {
     name: event.name,
     city: event.city,
     distances: event.races.map((race) => race.label),
-    url: event.website_url,
+    url,
     pageFile,
     truncated: page.truncated,
   });

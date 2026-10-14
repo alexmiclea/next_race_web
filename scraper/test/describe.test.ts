@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import {
   descriptionProblems,
+  descriptionSourceUrl,
   MIN_PAGE_CHARS,
   MAX_PAGE_CHARS,
   missingEvidence,
@@ -144,5 +145,28 @@ describe('parseDrafts', () => {
         /draft 2: "description" must be text or null/.test(error.message) &&
         /draft 2: "evidence" must be a list of quotes/.test(error.message),
     );
+  });
+});
+
+describe('descriptionSourceUrl', () => {
+  it('uses the race website by default', () => {
+    assert.equal(
+      descriptionSourceUrl({ website_url: 'https://zut.run/', description_source_url: null }),
+      'https://zut.run/',
+    );
+  });
+
+  it('prefers a source page set by hand, e.g. when the website is Facebook', () => {
+    assert.equal(
+      descriptionSourceUrl({
+        website_url: 'https://www.facebook.com/events/123',
+        description_source_url: 'https://itra.run/Races/RaceDetails/98100',
+      }),
+      'https://itra.run/Races/RaceDetails/98100',
+    );
+  });
+
+  it('returns null when there is neither', () => {
+    assert.equal(descriptionSourceUrl({ website_url: null, description_source_url: null }), null);
   });
 });
