@@ -27,7 +27,9 @@ export default async function AboutPage() {
         <DonateLink />
       </p>
 
-      <h2 className="mt-8 text-xl font-bold">{t("contactTitle")}</h2>
+      <h2 id="contact" className="mt-8 scroll-mt-4 text-xl font-bold">
+        {t("contactTitle")}
+      </h2>
       <p className="mt-2 text-muted">
         {t("contact")}{" "}
         <a href={`mailto:${CONTACT_EMAIL}`} className="font-medium text-accent underline">
