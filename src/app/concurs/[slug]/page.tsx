@@ -193,13 +193,6 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
 
       <aside className="mt-8 rounded-xl bg-surface p-4 text-sm text-muted">
         <p>{t("checkOrganizer")}</p>
-        {event.source_url && (
-          <p className="mt-2">
-            <a href={event.source_url} rel="noopener" className="underline">
-              {t("source")}
-            </a>
-          </p>
-        )}
       </aside>
     </main>
   );
