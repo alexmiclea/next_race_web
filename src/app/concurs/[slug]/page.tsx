@@ -98,17 +98,7 @@ export default async function EventPage({ params }: PageProps<"/concurs/[slug]">
             {t("about")}
           </h2>
           <p className="text-lg leading-relaxed">{event.description}</p>
-          <p className="mt-2 text-xs text-muted">
-            {t("aiSummary")}
-            {event.description_source_url && (
-              <>
-                {" "}
-                <a href={event.description_source_url} rel="noopener" className="underline">
-                  {t("aiSummarySource")}
-                </a>
-              </>
-            )}
-          </p>
+          <p className="mt-2 text-xs text-muted">{t("aiSummary")}</p>
         </section>
       )}
 
