@@ -13,6 +13,27 @@ import { createClient } from "@/lib/supabase/server";
 
 export type LoginState = { status: "idle" | "sent" | "invalid" | "tooMany" };
 
+export type PasswordLoginState = { status: "idle" | "invalid" | "wrong" | "tooMany" };
+
+/**
+ * Logs in with email and password. A wrong email and a wrong password get the same
+ * answer, so the form doesn't reveal who has an account. Supabase limits repeated tries.
+ */
+export async function signInWithPassword(
+  _previous: PasswordLoginState,
+  data: FormData,
+): Promise<PasswordLoginState> {
+  const email = String(data.get("email") ?? "").trim().toLowerCase();
+  const password = String(data.get("password") ?? "");
+  if (!looksLikeEmail(email) || password.length === 0) return { status: "invalid" };
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword({ email, password });
+  if (error?.status === 429) return { status: "tooMany" };
+  if (error) return { status: "wrong" };
+  redirect("/admin");
+}
+
 /**
  * Emails a login link. The answer is the same whether or not the address has an account,
  * so the form can't be used to find out who the admin is. Sign-ups are off, so no new

@@ -12,7 +12,8 @@
     "test": "node --test test/*.test.ts",
     "typecheck": "tsc --noEmit",
     "describe:prepare": "node --env-file=.env src/describe-prepare.ts",
-    "describe:apply": "node --env-file=.env src/describe-apply.ts"
+    "describe:apply": "node --env-file=.env src/describe-apply.ts",
+    "admin:password": "node --env-file=.env src/set-admin-password.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.117.2",
